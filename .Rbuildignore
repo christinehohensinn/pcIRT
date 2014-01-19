@@ -1,0 +1,11 @@
+.*~
+.git
+.git/
+/.git/
+./.git
+.gitignore
+^.*\.Rproj$
+^\.Rproj\.user$
+.tar.gz
+.tar
+

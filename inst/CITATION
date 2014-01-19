@@ -1,0 +1,17 @@
+citHeader("To cite the 'pcIRT' package in publications use:")
+
+year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date, perl = TRUE)
+vers <- paste("R package version", meta$Version)
+
+citEntry(entry="Manual",
+         title = "pcIRT: IRT models for polytomous and continuous item responses",
+         author = personList(as.person("Christine Hohensinn")),
+         year = year,
+         note = vers,
+
+         textVersion =
+         paste("Christine Hohensinn (",
+               year,
+               "). pcIRT: IRT models for polytomous and continuous item responses. ",
+               vers, ".", sep=""))
+

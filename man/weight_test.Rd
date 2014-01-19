@@ -1,0 +1,75 @@
+\name{weight_test}
+\alias{weight_test}
+\alias{summary.wt}
+\alias{print.wt}
+
+\title{
+Test for the scoring weights in the unidimensional polytomous Rasch model
+}
+\description{
+This functions tests the fit of fixed scoring parameters in a unidimensional polytomous Rasch model.
+}
+
+\usage{
+weight_test(MPRMobj, score_param)
+
+\method{summary}{wt}(object, \dots)
+\method{print}{wt}(x, \dots)
+}
+
+\arguments{
+  \item{MPRMobj}{ 
+Object of class \code{MPRM}
+}
+  \item{score_param}{
+Numerical vector with the scoring parameters that are tested  
+}
+  \item{object}{object of class \code{wt}}
+  \item{x}{{object of class \code{wt}}}  
+  \item{\dots}{\dots}
+}
+
+\details{
+If the unidimensional polytomous Rasch model fits the data, the weight test can be performed to test whether assumed scoring parameters are appropriate. An unconstrained unidimensional polytomous Rasch model is calculated including estimation of scoring parameters. Furthermore a constrained unidimensional polytomous Rasch model is estimated with fixed scoring parameters (according to the input). Subsequently a Likelihood Ratio test tests the fit of the fixed
+scoring parameters.
+}
+
+\value{
+\item{emp_Chi2}{\eqn{\chi^2} distributed value of the Likelihood Ratio test}
+\item{df}{degrees of freedom of the test statistic}
+\item{pval}{p value of the test statistic}
+\item{unconstrLoglikelihood}{log-likelihood of the unconstrained model}
+\item{constrLoglikelihood}{log-likelihood of the constrained model}
+\item{unconstrNrPar}{number of estimated parameters in the unconstrained model}
+\item{constrNrPar}{number of estimated parameters in the constrained model}
+\item{unconstrItempar}{estimated item parameters of the unconstrained model}
+\item{constrItempar}{estimated item parameters of the constrained model}
+\item{unconstrScoreParameter}{estimated scoring parameters of the unconstrained model}
+}
+\references{
+Fischer, G. H. (1974). Einfuehrung in die Theorie psychologischer Tests [Introduction to test
+theory]. Bern: Huber.
+}
+\author{
+Christine Hohensinn
+}
+
+
+\seealso{
+\code{\link{MPRM}}
+\code{\link{dLRT}}
+}
+\examples{
+#simulate data set
+simdat <- simMPRM(rbind(matrix(c(-1.5,0.5,0.5,1,0.8,-0.3, 0.2,-1.2), ncol=4),0), 500)
+
+#estimate MPRM item parameters
+res_mprm <- MPRM(simdat$datmat)
+
+#tests the scoring parameter 0.5 for the unidimensional polytomous model
+res_weight <- weight_test(res_mprm,  score_param=c(0.5))
+summary(res_weight)
+
+}
+\keyword{ weight test}
+\keyword{ scoring }
