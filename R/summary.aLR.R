@@ -10,6 +10,7 @@ function(object,...){
     cat("--------------------------------------------------------------------\n")
     cat("Parameter estimates: \n")
     print(object$itempar)
+    cat("SE estimates: \n")
     print(object$item_se)
     
   }

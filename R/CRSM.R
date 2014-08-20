@@ -1,3 +1,60 @@
+#' Estimation of Continuous Rating Scale Model (Mueller, 1987)
+#' 
+#' Estimation of the Rating Scale Model for continuous data by Mueller (1987).
+#' 
+#' \deqn{P_{vi}(a \leq X \leq b) = \frac{\int_a^b exp[x \mu + x(2c-x) \theta]
+#' dx}{\int_{c-\frac{d}{2}}^{c+\frac{d}{2}} exp[t \mu + t(2c-t) \theta] dt}}
+#' 
+#' Parameters are estimated by a pairwise algorithm.
+#' 
+#' The parameters of the Continuous Rating Scale Model are estimated by a
+#' pairwise algorithm (the algorithm is described in detail in Mueller, 1999)
+#' using Newton-Raphson iterations for optimizing. For the pairwise algorithm
+#' no assumption on the person parameter distribution is necessary.
+#' 
+#' @aliases CRSM summary.CRSM print.CRSM
+#' @param data Data matrix or data frame; rows represent observations
+#' (persons), columns represent the items.
+#' @param start Starting values for parameter estimation. If missing, a vector
+#' of 0 is used as starting values.
+#' @param min The minimum value of the response scale (on which the data are
+#' based).
+#' @param max The maximum value of the response scale (on which the data are
+#' based).
+#' @param object object of class \code{CRSM}
+#' @param x object of class \code{CRSM}
+#' @param \dots \dots{}
+#' @return \item{data}{data matrix according to the input} \item{data_p}{data
+#' matrix with data transformed to a response interval between 0 and 1}
+#' \item{itempar}{estimated item parameters} \item{itempar_se_low}{estimated
+#' lower boundary for standard errors of estimated item parameters}
+#' \item{itempar_se_up}{estimated upper boundary for standard errors of
+#' estimated item parameters} \item{itempar_se}{estimated mean standard errors
+#' of estimated item parameters} \item{distrpar}{estimated distribution
+#' parameter} \item{distrpar_se_low}{estimated lower boundary for standard
+#' errors of estimated distribution parameter} \item{distrpar_se_up}{estimated
+#' upper boundary for standard errors of estimated distribution parameter}
+#' \item{itempar_se}{estimated mean standard errors of estimated distribution
+#' parameter} \item{iterations}{Number of Newton-Raphson iterations for each
+#' item pair} \item{call}{call of the CRSM function}
+#' @author Christine Hohensinn
+#' @references Mueller, H. (1987). A Rasch model for continuous ratings.
+#' Psychometrika, 52, 165-181.
+#' 
+#' Mueller, H. (1999). Probabilistische Testmodelle fuer diskrete und
+#' kontinuierliche Ratingskalen. [Probabilistic models for discrete and
+#' continuous rating scales]. Bern: Huber.
+#' @keywords continuous rating scale model
+#' @examples
+#' 
+#' #estimate CRSM item parameters
+#' data(example1)
+#' res_crsm <- CRSM(example1, min=0, max=1)
+#' 
+#' summary(res_crsm)
+#' 
+#' 
+#' @export CRSM
 CRSM <-
 function(data, start, min, max){
 

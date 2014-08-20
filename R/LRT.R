@@ -1,28 +1,48 @@
+#' Computes Andersen's Likelihood Ratio Test for the multidimensional
+#' polytomous Rasch model
+#' 
+#' Andersen's Likelihood Ratio Test is a model test for Rasch models (based on
+#' CML estimation) and splits the data set into subsamples to test the person
+#' homogeneity
+#' 
+#' The default split criterion \code{"score"} computes the raw score of every
+#' person according to the category values in the data set. The sample is split
+#' by the median of this raw score.
+#' 
+#' @aliases LRT summary.aLR print.aLR
+#' @param MPRMobj Object of class \code{MPRM}
+#' @param splitcrit Vector or the character vector \code{"score"} to define the
+#' split criterion. The default split criterion \code{"score"} splits the
+#' sample according to the median of the raw score. Vector can be numeric,
+#' factor or character. (see details)
+#' @param object object of class \code{aLR}
+#' @param x object of class \code{aLR}
+#' @param \dots \dots{}
+#' @return \item{emp_Chi2}{\eqn{\chi^2} distributed value of the Likelihood
+#' Ratio test} \item{df}{degrees of freedom of the test statistic}
+#' \item{pval}{p value of the test statistic} \item{itempar}{estimated item
+#' parameters for each subsample} \item{item_se}{estimated standard errors for
+#' the item parameters for each subsample}
+#' @author Christine Hohensinn
+#' @seealso \code{\link{MPRM}} \code{\link{dLRT}}
+#' @references Andersen, E. B. (1973). A goodness of fit test for the Rasch
+#' model. Psychometrika, 38, 123- 140.
+#' 
+#' Fischer, G. H. (1974). Einfuehrung in die Theorie psychologischer Tests
+#' [Introduction to test theory]. Bern: Huber.
+#' @keywords Likelihood Ratio test model test
+#' @examples
+#' 
+#' #simulate data set
+#' simdat <- simMPRM(rbind(matrix(c(-1.5,0.5,0.5,1,0.8,-0.3, 0.2,-1.2), ncol=4),0), 500)
+#' 
+#' #estimate MPRM item parameters
+#' res_mprm <- MPRM(simdat$datmat)
+#' 
+#' #compute Andersen's Likelihood Ratio test
+#' res_lrt <- LRT(res_mprm)
+#' summary(res_lrt)
+#'   
+#' @export LRT
 LRT <-
-function(MPRMobj, splitcrit = "score"){
-  
-  if(is.character(splitcrit) && splitcrit == "score"){
-    sc  <- rowSums(MPRMobj$data)
-    scm <- ifelse(sc > median(sc), 1,0)
-  }
-  else{
-    if(!is.vector(splitcrit)){stop("Error: split criterium has to be a vector!", call. = FALSE)}
-    scm <- splitcrit
-  }  
-  sp_dat <- split(as.data.frame(MPRMobj$data), as.factor(scm), drop=FALSE)
-  
-  sp_res <- lapply(sp_dat, function(dat) MPRM(dat, start=as.vector(MPRMobj$itempar[-nrow(MPRMobj$itempar), -ncol(MPRMobj$data)])))
-  sp_val    <- sapply(sp_res, function(ex) ex$logLikelihood)
-  sp_npar  <- sapply(sp_res, function(ex) length(ex$estpar))
-  
-  emp_Chi2 <- -2*(MPRMobj$logLikelihood - sum(sp_val))
-  df       <- sum(sp_npar) - length(MPRMobj$estpar)
-  pval     <- 1-pchisq(emp_Chi2, df)
-  
-  itempar_split <- sapply(sp_res, function(re) list(re$itempar*(-1)))
-  itemse_split <- sapply(sp_res, function(re) list(re$itempar_se))
-  
-  res_lrt <- list(emp_Chi2 = emp_Chi2, df=df, pval=pval, itempar=itempar_split, item_se=itemse_split)
-  class(res_lrt) <- "aLR"
-  res_lrt
-}
+  function(object,...)UseMethod("LRT")
