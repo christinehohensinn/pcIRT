@@ -1,3 +1,12 @@
+#' @rdname mprml
+#'
+#' @export
+#'
+#' @method summary MPRMl
+#'
+#' @param object object of class \code{MRPMl}
+#' @param \dots \dots{}
+
 summary.MPRMl <-
 function(object, ...){
   

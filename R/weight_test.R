@@ -15,9 +15,7 @@
 #' @param MPRMobj Object of class \code{MPRM}
 #' @param score_param Numerical vector with the scoring parameters that are
 #' tested
-#' @param object object of class \code{wt}
-#' @param x object of class \code{wt}
-#' @param \dots \dots{}
+
 #' @return \item{emp_Chi2}{\eqn{\chi^2} distributed value of the Likelihood
 #' Ratio test} \item{df}{degrees of freedom of the test statistic}
 #' \item{pval}{p value of the test statistic}
@@ -34,6 +32,9 @@
 #' @references Fischer, G. H. (1974). Einfuehrung in die Theorie
 #' psychologischer Tests [Introduction to test theory]. Bern: Huber.
 #' @keywords weight test scoring
+#' 
+#' @rdname wt
+#' 
 #' @examples
 #' 
 #' #simulate data set

@@ -1,3 +1,12 @@
+#' @rdname wt
+#'
+#' @export
+#'
+#' @method print wt
+#'
+#' @param x object of class \code{wt}
+
+
 print.wt <-
 function(x, ...){
   

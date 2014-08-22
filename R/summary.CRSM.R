@@ -1,3 +1,13 @@
+#' @rdname crsm
+#'
+#' @export
+#'
+#' @method summary CRSM
+#'
+#' @param object object of class \code{CRSM}
+#' @param \dots \dots{}
+
+
 summary.CRSM <-
 function(object, ...){
   

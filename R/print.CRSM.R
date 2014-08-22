@@ -1,3 +1,11 @@
+#' @rdname crsm
+#'
+#' @export
+#'
+#' @method print CRSM
+#'
+#' @param x object of class \code{CRSM}
+
 print.CRSM <-
 function(x, ...){
   

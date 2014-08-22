@@ -67,6 +67,7 @@
 #' psychology, Proceedings Fourth Berekely Symposium on Mathematical
 #' Statistiscs and Probability 5, 321-333.
 #' @keywords multidimensional polytomous Rasch model linear restriction
+#' @rdname mprml
 #' @examples
 #' 
 #' #simulate data set according to the general MPRM

@@ -20,9 +20,6 @@
 #' automatically.
 #' @param start Starting values for parameter estimation. If missing, a vector
 #' of 0 is used as starting values.
-#' @param object object of class \code{MPRM}
-#' @param x object of class \code{MPRM}
-#' @param \dots \dots{}
 #' @return \item{data}{data matrix according to the input} \item{design}{design
 #' matrix either according to the input or according to the automatically
 #' generated matrix} \item{logLikelihood}{conditional log-likelihood}
@@ -45,6 +42,11 @@
 #' psychology, Proceedings Fourth Berekely Symposium on Mathematical
 #' Statistiscs and Probability 5, 321-333.
 #' @keywords multidimensional polytomous Rasch model
+#'  
+#' @useDynLib pcIRT
+#' @importFrom Rcpp evalCpp
+#' 
+#' @rdname mprm
 #' @examples
 #' 
 #' #simulate data set

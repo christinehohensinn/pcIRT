@@ -1,3 +1,12 @@
+#' @rdname wt
+#'
+#' @export
+#'
+#' @method summary wt
+#'
+#' @param object object of class \code{wt}
+#' @param \dots \dots{}
+
 summary.wt <-
 function(object, ...){
   

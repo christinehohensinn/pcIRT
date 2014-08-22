@@ -21,9 +21,6 @@
 #' based).
 #' @param max The maximum value of the response scale (on which the data are
 #' based).
-#' @param object object of class \code{CRSM}
-#' @param x object of class \code{CRSM}
-#' @param \dots \dots{}
 #' @return \item{data}{data matrix according to the input} \item{data_p}{data
 #' matrix with data transformed to a response interval between 0 and 1}
 #' \item{itempar}{estimated item parameters} \item{itempar_se_low}{estimated
@@ -55,6 +52,7 @@
 #' 
 #' 
 #' @export CRSM
+#' @rdname crsm
 CRSM <-
 function(data, start, min, max){
 

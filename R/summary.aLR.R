@@ -1,3 +1,13 @@
+#' @rdname lrt
+#'
+#' @export
+#'
+#' @method summary aLR
+#'
+#' @param object object of class \code{LRT}
+#' @param \dots \dots{}
+#' 
+
 summary.aLR <-
 function(object,...){
     

@@ -15,9 +15,6 @@
 #' split criterion. The default split criterion \code{"score"} splits the
 #' sample according to the median of the raw score. Vector can be numeric,
 #' factor or character. (see details)
-#' @param object object of class \code{aLR}
-#' @param x object of class \code{aLR}
-#' @param \dots \dots{}
 #' @return \item{emp_Chi2}{\eqn{\chi^2} distributed value of the Likelihood
 #' Ratio test} \item{df}{degrees of freedom of the test statistic}
 #' \item{pval}{p value of the test statistic} \item{itempar}{estimated item
@@ -31,6 +28,9 @@
 #' Fischer, G. H. (1974). Einfuehrung in die Theorie psychologischer Tests
 #' [Introduction to test theory]. Bern: Huber.
 #' @keywords Likelihood Ratio test model test
+#' 
+#' @rdname lrt
+#' 
 #' @examples
 #' 
 #' #simulate data set
@@ -43,6 +43,6 @@
 #' res_lrt <- LRT(res_mprm)
 #' summary(res_lrt)
 #'   
-#' @export LRT
+#' @export
 LRT <-
   function(object,...)UseMethod("LRT")

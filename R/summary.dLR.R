@@ -1,3 +1,12 @@
+#' @rdname dLR
+#'
+#' @export
+#'
+#' @method summary dLR
+#'
+#' @param object object of class \code{dLR}
+#' @param \dots \dots{}
+
 summary.dLR <-
 function(object, ...){
     

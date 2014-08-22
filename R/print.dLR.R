@@ -1,3 +1,11 @@
+#' @rdname dLR
+#'
+#' @export
+#'
+#' @method print dLR
+#'
+#' @param x object of class \code{dLR}
+
 print.dLR <-
 function(x, ...){
     

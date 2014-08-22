@@ -1,3 +1,13 @@
+#' @rdname lrt
+#'
+#' @export
+#'
+#' @method print aLR
+#'
+#' @param x object of class \code{LRT}
+
+
+
 print.aLR <-
 function(x,...){
     

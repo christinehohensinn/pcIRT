@@ -1,3 +1,11 @@
+#'@return \code{NULL}
+#'
+#'@rdname lrt
+#'@method lrt MRPM
+#'
+#'
+
+
 LRT <-
 function(MPRMobj, splitcrit = "score"){
   

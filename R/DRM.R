@@ -1,34 +1,36 @@
 #' Estimation of dichotomous logistic Rasch model (Rasch, 1960)
 #' 
-#' Estimation of dichotomous logistic Rasch model (Rasch, 1960).
+#' This function estimates the dichotomous Rasch model by Rasch
+#' (1960).
 #' 
 #' Parameters are estimated by CML.
 #' 
-#' .
-#' 
 #' @param data Data matrix or data frame; rows represent observations
 #' (persons), columns represent the items.
-#' @return \item{data}{data matrix according to the input} \item{data_p}{data
-#' matrix with data transformed to a response interval between 0 and 1}
-#' \item{itempar}{estimated item parameters} \item{itempar_se_low}{estimated
-#' lower boundary for standard errors of estimated item parameters}
-#' \item{itempar_se_up}{estimated upper boundary for standard errors of
-#' estimated item parameters} \item{itempar_se}{estimated mean standard errors
-#' of estimated item parameters} \item{distrpar}{estimated distribution
-#' parameter} \item{distrpar_se_low}{estimated lower boundary for standard
-#' errors of estimated distribution parameter} \item{distrpar_se_up}{estimated
-#' upper boundary for standard errors of estimated distribution parameter}
-#' \item{itempar_se}{estimated mean standard errors of estimated distribution
-#' parameter} \item{iterations}{Number of Newton-Raphson iterations for each
-#' item pair} \item{call}{call of the CRSM function}
-#' @author Christine Hohensinn
-#' @references Mueller, H. (1987). A Rasch model for continuous ratings.
-#' Psychometrika, 52, 165-181.
+#' @param desmat Design matrix; if missing, the design matrix for a dichotomous Rasch model will be created automatically.
+#' @param start starting values for parameter estimation. If missing, a vector of 0 is used as starting values.
 #' 
-#' Mueller, H. (1999). Probabilistische Testmodelle fuer diskrete und
-#' kontinuierliche Ratingskalen. [Probabilistic models for discrete and
-#' continuous rating scales]. Bern: Huber.
+#' @return \item{data}{data matrix according to the input} \item{design}{design
+#' matrix either according to the input or according to the automatically
+#' generated matrix} \item{logLikelihood}{conditional log-likelihood}
+#' \item{estpar}{estimated basic item parameters}
+#' \item{estpar_se}{estimated standard errors for basic item
+#' parameters} \item{itempar}{estimated item parameters}
+#' \item{itempar_se}{estimated standard errors for item parameters}
+#' \item{hessian}{Hessian matrix} \item{convergence}{convergence of solution
+#' (see help files in \code{\link{optim}})} \item{fun_calls}{number of function
+#' calls (see help files in \code{\link{optim}})}
+#' @author Christine Hohensinn
+#' @references #' Fischer, G. H. (1974). Einfuehrung in die Theorie psychologischer Tests
+#' [Introduction to test theory]. Bern: Huber.
+#' 
+#' Rasch, G. (1960). Probabalistic models for some intelligence and attainment tests. Danmarks paedagogiske institut.
 #' @keywords continuous rating scale model
+#' 
+#' @rdname drm
+#' 
+#' @export
+#' 
 #' @examples
 #' 
 #' #estimate CRSM item parameters
@@ -38,7 +40,6 @@
 #' #summary(res_crsm)
 #' 
 #' 
-#' @export DRM
 DRM <- 
   function(data, desmat, start){
 
@@ -87,7 +88,7 @@ estpar_se <- sqrt(diag(solve(res$hessian*(-1))))
 itempar_se <- sqrt(diag(desmat %*% solve(res$hessian*(-1)) %*% t(desmat)))
                    
 
-res_all <- list(data=data, logLikelihood=res$value, estpar=res$par, estpar_se=estpar_se, itempar=itempar*(-1), itempar_se=itempar_se, hessian=res$hessian*(-1), convergence=res$convergence, fun_calls=res$counts, call=call)
+res_all <- list(data=data, design=desmat,logLikelihood=res$value, estpar=res$par, estpar_se=estpar_se, itempar=itempar*(-1), itempar_se=itempar_se, hessian=res$hessian*(-1), convergence=res$convergence, fun_calls=res$counts, call=call)
 class(res_all) <- "DRM"
 res_all
 }

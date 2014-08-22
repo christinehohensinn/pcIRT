@@ -1,3 +1,7 @@
+#'@rdname lrt
+#'@method lrt DRM
+
+
 LRT <-
 function(DRMobj, splitcrit = "score"){
   

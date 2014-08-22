@@ -1,3 +1,13 @@
+#' @rdname drm
+#'
+#' @export
+#'
+#' @method summary DRM
+#'
+#' @param object object of class \code{DRM}
+#' @param \dots \dots{}
+
+
 summary.DRM <-
 function(object, ...){
   

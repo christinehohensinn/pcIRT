@@ -1,3 +1,11 @@
+#' @rdname mprm
+#'
+#' @export
+#'
+#' @method print MPRM
+#'
+#' @param x object of class \code{MPRM}
+
 print.MPRM <-
 function(x, ...){
   
