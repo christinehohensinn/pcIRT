@@ -1,3 +1,7 @@
+#'@rdname gmc
+#'@method gmc aLR
+#'@export
+
 gmc.aLR <-
 function(object, ...){
   if(length(object$itempar) > 2) {stop("there are more than two subsamples! Only two subsamples can be plotted")}

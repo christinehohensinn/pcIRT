@@ -47,7 +47,8 @@ pp <- rnorm(50, 0,1)
 
 #simulate data set
 #this is only an illustrating example for simulating data!
-#In practice, a sample size of n=50 will be too small for most application demands
+#In practice, a sample size of n=50 will be too small for most application
+#demands
 simdatC <- simCRSM(item_p, dis_p, pp)
 }
 \author{

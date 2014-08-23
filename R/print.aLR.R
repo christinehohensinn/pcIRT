@@ -3,8 +3,8 @@
 #' @export
 #'
 #' @method print aLR
-#'
-#' @param x object of class \code{LRT}
+#' @param x Object of class aLR
+#' @param \ldots further arguments
 
 
 

@@ -1,5 +1,9 @@
+#'@rdname gmc
+#'@method gmc CRSM
+#'@export
+
 gmc.CRSM <-
-function(object,..., splitcrit="score"){
+function(object, splitcrit="score", ...){
   
   if(splitcrit[1] == "score"){
     sc  <- rowSums(object$data)

@@ -1,3 +1,14 @@
+#' @param set0 if \code{set0=TRUE} for those raw scores patterns with 0
+#' observations (except in the reference category) the person parameter value
+#' is set minimal. With this procedure it is possible to estimate at least the
+#' remaining person parameters of these raw score pattern.  Note: only relevant
+#' for person parameter estimation of MPRM.
+
+#'@rdname perspar
+#'@method person_par MPRM
+#'@export
+
+
 person_par.MPRM <-
 function(object, ..., set0 = FALSE){
 

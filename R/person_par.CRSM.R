@@ -1,3 +1,7 @@
+#'@rdname perspar
+#'@method person_par CRSM
+#'@export
+
 person_par.CRSM <-
 function(object, ...){
  

@@ -9,8 +9,8 @@
 #' person according to the category values in the data set. The sample is split
 #' by the median of this raw score.
 #' 
-#' @aliases LRT summary.aLR print.aLR
-#' @param MPRMobj Object of class \code{MPRM}
+#' @aliases LRT summary.aLR print.aLR LRT.MPRM LRT.DRM
+#' @param object Object of class \code{MPRM} or \code{DRM} or \code{aLR}
 #' @param splitcrit Vector or the character vector \code{"score"} to define the
 #' split criterion. The default split criterion \code{"score"} splits the
 #' sample according to the median of the raw score. Vector can be numeric,
@@ -34,7 +34,8 @@
 #' @examples
 #' 
 #' #simulate data set
-#' simdat <- simMPRM(rbind(matrix(c(-1.5,0.5,0.5,1,0.8,-0.3, 0.2,-1.2), ncol=4),0), 500)
+#' simdat <- simMPRM(rbind(matrix(c(-1.5,0.5,0.5,1,0.8,-0.3, 0.2,-1.2), 
+#'                   ncol=4),0), 500)
 #' 
 #' #estimate MPRM item parameters
 #' res_mprm <- MPRM(simdat$datmat)

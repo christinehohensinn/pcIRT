@@ -7,9 +7,9 @@
 #' @param x object of class \code{DRM}
 
 print.DRM <-
-  function(object, ...){
+  function(x, ...){
     
-    parall <- rbind(cbind("item estimates"=object$itempar, "SE"=object$itempar_se, "SE low"= object$itempar_se_low, "SE up"=object$itempar_se_up),"distrpar"=c(object$distrpar, object$distrpar_se, object$distrpar_se_low, object$distrpar_se_up) )
+    parall <- rbind(cbind("item estimates"=x$itempar, "SE"=x$itempar_se, "SE low"= x$itempar_se_low, "SE up"=x$itempar_se_up),"distrpar"=c(x$distrpar, x$distrpar_se, x$distrpar_se_low, x$distrpar_se_up) )
     
     cat("Parameter estimates: \n")
     print(parall)  

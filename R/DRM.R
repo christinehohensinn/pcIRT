@@ -21,7 +21,7 @@
 #' (see help files in \code{\link{optim}})} \item{fun_calls}{number of function
 #' calls (see help files in \code{\link{optim}})}
 #' @author Christine Hohensinn
-#' @references #' Fischer, G. H. (1974). Einfuehrung in die Theorie psychologischer Tests
+#' @references Fischer, G. H. (1974). Einfuehrung in die Theorie psychologischer Tests
 #' [Introduction to test theory]. Bern: Huber.
 #' 
 #' Rasch, G. (1960). Probabalistic models for some intelligence and attainment tests. Danmarks paedagogiske institut.
@@ -33,16 +33,18 @@
 #' 
 #' @examples
 #' 
-#' #estimate CRSM item parameters
-#' #data(example1)
-#' #res_crsm <- CRSM(example1, min=0, max=1)
-#' 
-#' #summary(res_crsm)
+#' #estimate Rasch model parameters
+#' data(example3)
+#' res_drm <- DRM(example3)
+#'  
+#' summary(res_drm)
 #' 
 #' 
 DRM <- 
   function(data, desmat, start){
 
+call <- match.call()
+    
 data <- as.matrix(data)
 rv <- rowSums(data)
 si <- colSums(data)

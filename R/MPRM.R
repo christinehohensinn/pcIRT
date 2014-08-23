@@ -45,12 +45,14 @@
 #'  
 #' @useDynLib pcIRT
 #' @importFrom Rcpp evalCpp
+#' @importFrom combinat xsimplex
 #' 
 #' @rdname mprm
 #' @examples
 #' 
 #' #simulate data set
-#' simdat <- simMPRM(rbind(matrix(c(-1.5,0.5,0.5,1,0.8,-0.3, 0.2,-1.2), ncol=4),0), 500)
+#' simdat <- simMPRM(rbind(matrix(c(-1.5,0.5,0.5,1,0.8,-0.3,
+#'                                   0.2,-1.2), ncol=4),0), 500)
 #' 
 #' #estimate MPRM item parameters
 #' res_mprm <- MPRM(simdat$datmat)
@@ -128,7 +130,7 @@ cL <- function(para=startval,kateg.zahl=kateg.zahl, item.zahl=item.zahl,col.tabl
     sec <- sum(patt*cfg.o,na.rm=T)
     
   } else {
-    cf.g <- gamfunk(eps.mat=eps[1,])
+    cf.g <- gamfunk(epsmat=eps[1,])
     sec <- sum(patt[-1] * log(cf.g$gammat), na.rm=T)
   }
   #search for gamma for each patt
@@ -162,7 +164,7 @@ der1 <- function(para=startval, col.table=col.table, kateg.zahl=kateg.zahl, item
     }    
     eps.f[[1]] <- NULL
 
-    cf.all <- lapply(eps.f, function(gg) {gamfunk(eps.mat=gg[1,])})
+    cf.all <- lapply(eps.f, function(gg) {gamfunk(epsmat=gg[1,])})
     
     #Vektor raussuchen wo die auftretenden pattern in patt.c vorkommen
     

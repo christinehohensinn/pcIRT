@@ -7,7 +7,7 @@
 \usage{
 DRM(data, desmat, start)
 
-\method{print}{DRM}(object, ...)
+\method{print}{DRM}(x, ...)
 
 \method{summary}{DRM}(object, ...)
 }
@@ -45,17 +45,17 @@ This function estimates the dichotomous Rasch model by Rasch
 Parameters are estimated by CML.
 }
 \examples{
-#estimate CRSM item parameters
-#data(example1)
-#res_crsm <- CRSM(example1, min=0, max=1)
+#estimate Rasch model parameters
+data(example3)
+res_drm <- DRM(example3)
 
-#summary(res_crsm)
+summary(res_drm)
 }
 \author{
 Christine Hohensinn
 }
 \references{
-#' Fischer, G. H. (1974). Einfuehrung in die Theorie psychologischer Tests
+Fischer, G. H. (1974). Einfuehrung in die Theorie psychologischer Tests
 [Introduction to test theory]. Bern: Huber.
 
 Rasch, G. (1960). Probabalistic models for some intelligence and attainment tests. Danmarks paedagogiske institut.

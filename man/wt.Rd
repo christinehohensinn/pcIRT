@@ -51,7 +51,8 @@ tests the fit of the fixed scoring parameters.
 }
 \examples{
 #simulate data set
-simdat <- simMPRM(rbind(matrix(c(-1.5,0.5,0.5,1,0.8,-0.3, 0.2,-1.2), ncol=4),0), 500)
+simdat <- simMPRM(rbind(matrix(c(-1.5,0.5,0.5,1,0.8,-0.3, 0.2,-1.2),
+                  ncol=4),0), 500)
 
 #estimate MPRM item parameters
 res_mprm <- MPRM(simdat$datmat)

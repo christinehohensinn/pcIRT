@@ -9,11 +9,6 @@
 #' 
 #' @aliases person_par person_par.MPRM person_par.CRSM
 #' @param object Object of class \code{MPRM} or \code{CRSM}
-#' @param set0 if \code{set0=TRUE} for those raw scores patterns with 0
-#' observations (except in the reference category) the person parameter value
-#' is set minimal. With this procedure it is possible to estimate at least the
-#' remaining person parameters of these raw score pattern.  Note: only relevant
-#' for person parameter estimation of MPRM.
 #' @param \dots \dots{}
 #' @return \item{ptable}{table showing for each (observed) raw score the
 #' corresponding estimated person parameter and standard error}
@@ -29,6 +24,9 @@
 #' kontinuierliche Ratingskalen. [Probabilistic models for discrete and
 #' continuous rating scales]. Bern: Huber.
 #' @keywords person parameter
+#' 
+#' @rdname perspar
+#' 
 #' @examples
 #' 
 #' #estimate CRSM for the first four items
