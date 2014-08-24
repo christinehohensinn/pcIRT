@@ -65,6 +65,15 @@ if(missing(min)){stop("Error: enter highest possible value of items")}
 # bring data in interval (0,1)
 data_p <- (data - min)/(max-min) 
 
+#check if few oberservations for item / person
+if (any(apply(data_p, 2, function(dc) sum(dc != 0 & dc != 1)) %in% c(0,1)))
+{cat("warning: there is at least 1 item with only 1 observation containing no extreme rawscore. 
+     This will probably cause estimation problems")}
+if (any(apply(data_p, 1, function(dc) sum(dc != 0 & dc != 1)) %in% c(0,1)))
+{cat("warning: there is at least 1 person with only 1 observation containing no extreme rawscore. 
+     This will probably cause estimation problems")}
+
+
 combis <- combn(ncol(data_p),2)
 
 iterations <- vector(mode="numeric",length=ncol(combis))
@@ -83,7 +92,7 @@ if(missing(start)){
 
 parlist <- lapply(1:ncol(combis), function(m) {
   zwi <- data_p[,c(combis[1,m],combis[2,m])]
-  zwi2 <- zwi[rowSums(zwi)!=0 & rowSums(zwi)!=2,] #delete extreme scores
+  zwi2 <- zwi[rowSums(zwi)!=0 & rowSums(zwi)!=2,, drop=FALSE] #delete extreme scores
   
   uij <- zwi2[,1]-zwi2[,2]
   sij <- sum(uij)
