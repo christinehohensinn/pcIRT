@@ -18,10 +18,11 @@
 #' based).
 #' @param max The maximum value of the response scale (on which the data are
 #' based).
-#' @param method estimation method is either maximization of the pseudo-conditional-maximum-likelihood ("pcml")
+#' @param method Estimation method is either maximization of the pseudo-conditional-maximum-likelihood ("pcml")
 #' or a pairwise algorithm("pair"), default is "pair"
 #' @param start Starting values for parameter estimation. If missing, a vector
 #' of 0 is used as starting values.
+#' @param conv Convergence criterium for the pairwise algorithm ("pair")
 #' @return \item{data}{data matrix according to the input} \item{data_p}{data
 #' matrix with data transformed to a response interval between 0 and 1}
 #' \item{itempar}{estimated item parameters} \item{itempar_se_low}{estimated
@@ -56,7 +57,7 @@
 #' @export CRSM
 #' @rdname crsm
 CRSM <-
-function(data, min, max, method="pair", start){
+function(data, min, max, method="pair", start, conv=0.0001){
 
 call <- match.call()
 
@@ -154,7 +155,7 @@ parlist <- lapply(1:ncol(combis), function(m) {
   iter        <- 0
   para        <- NA
 
-  while( is.na(para) || max(abs(para1-para)) > 0.0001){
+  while( is.na(para) || max(abs(para1-para)) > conv){
     para <- para1
 
     S0n.i <- sapply(bound.v, function(b) integrate(S0n,paraI=para,lower=-b, upper=b, stop.on.error=F)$value)
