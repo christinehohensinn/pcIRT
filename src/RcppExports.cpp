@@ -9,15 +9,11 @@ using namespace Rcpp;
 NumericVector gamfunk(NumericVector epsmat, NumericMatrix gammat);
 RcppExport SEXP pcIRT_gamfunk(SEXP epsmatSEXP, SEXP gammatSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< NumericVector >::type epsmat(epsmatSEXP );
-        Rcpp::traits::input_parameter< NumericMatrix >::type gammat(gammatSEXP );
-        NumericVector __result = gamfunk(epsmat, gammat);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type epsmat(epsmatSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type gammat(gammatSEXP);
+    __result = Rcpp::wrap(gamfunk(epsmat, gammat));
+    return __result;
 END_RCPP
 }
