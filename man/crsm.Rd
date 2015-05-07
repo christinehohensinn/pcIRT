@@ -6,7 +6,7 @@
 \alias{summary.CRSM}
 \title{Estimation of Continuous Rating Scale Model (Mueller, 1987)}
 \usage{
-CRSM(data, min, max, method = "pair", start)
+CRSM(data, min, max, method = "pair", start, conv = 1e-04)
 
 \method{print}{CRSM}(x, ...)
 
@@ -22,11 +22,13 @@ based).}
 \item{max}{The maximum value of the response scale (on which the data are
 based).}
 
-\item{method}{estimation method is either maximization of the pseudo-conditional-maximum-likelihood ("pcml")
+\item{method}{Estimation method is either maximization of the pseudo-conditional-maximum-likelihood ("pcml")
 or a pairwise algorithm("pair"), default is "pair"}
 
 \item{start}{Starting values for parameter estimation. If missing, a vector
 of 0 is used as starting values.}
+
+\item{conv}{Convergence criterium for the pairwise algorithm ("pair")}
 
 \item{x}{object of class \code{CRSM}}
 
@@ -68,6 +70,7 @@ data(example1)
 res_crsm <- CRSM(example1, min=0, max=1)
 
 summary(res_crsm)
+#'
 }
 \author{
 Christine Hohensinn

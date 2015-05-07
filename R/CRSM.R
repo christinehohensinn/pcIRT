@@ -51,9 +51,7 @@
 #' res_crsm <- CRSM(example1, min=0, max=1)
 #'
 #' summary(res_crsm)
-#'
-#' @importFrom cubature adaptIntegrate
-#'
+#'#'
 #' @export CRSM
 #' @rdname crsm
 CRSM <-
@@ -110,13 +108,15 @@ if(method=="pcml"){
         return(nennteil)
       }
 
-      adaptIntegrate(integrand, lowerLimit=lowerb2, upperLimit=upperb2, tol=0.1)
+      stest <- function(t, paraI){exp(-t*paraI[1]- (rvec[2]- t)^2*paraI[2] - paraI[2]*(t^2))}
 
+      integrate(stest, paraI=para, lower=lowerb2, upper=upperb2, stop.on.error=F)$value
     }
     )
 
-    nenner <- sapply(nenn, function(v) v$integral)
-    zahler - sum(log(nenner))
+    #nenner <- sapply(nenn, function(v) v$integral)
+
+    zahler - sum(log(nenn))
 
   }
   parlist <- lapply(1:ncol(combis), function(m) {
