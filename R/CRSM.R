@@ -5,11 +5,9 @@
 #' \deqn{P_{vi}(a \leq X \leq b) = \frac{\int_a^b exp[x \mu + x(2c-x) \theta]
 #' dx}{\int_{c-\frac{d}{2}}^{c+\frac{d}{2}} exp[t \mu + t(2c-t) \theta] dt}}
 #'
-#' Parameters are estimated either by a pairwise conditional likelihood estimation (as pseudo-likelihood approach) or  a pairwise algorithm.
+#' Parameters are estimated by a pairwise conditional likelihood estimation (a pseudo-likelihood approach, described in Mueller, 1999).
 #'
-#' The parameters of the Continuous Rating Scale Model are estimated by a cml approach. a
-#' pairwise algorithm (the algorithm is described in detail in Mueller, 1999)
-#' using Newton-Raphson iterations for optimizing.  Alternatively item parameters can be estimated by conditional maximum likelihood estimation. Because of the time-consuming estimation of high-dimensional integrals, a pairwise conditional likelihood estimation is used in this case. For both estimation methods no assumption on the person parameter distribution are necessary. Note, that "pcml" as estimation method is considerably slower than the "pair" method.
+#' The parameters of the Continuous Rating Scale Model are estimated by a pairwise cml approach using Newton-Raphson iterations for optimizing.
 #'
 #' @aliases CRSM summary.CRSM print.CRSM
 #' @param data Data matrix or data frame; rows represent observations
@@ -18,11 +16,9 @@
 #' based).
 #' @param max The maximum value of the response scale (on which the data are
 #' based).
-#' @param method Estimation method is either maximization of the pseudo-conditional-maximum-likelihood ("pcml")
-#' or a pairwise algorithm("pair"), default is "pair"
 #' @param start Starting values for parameter estimation. If missing, a vector
 #' of 0 is used as starting values.
-#' @param conv Convergence criterium for the pairwise algorithm ("pair")
+#' @param conv Convergence criterium for parameter estimation.
 #' @return \item{data}{data matrix according to the input} \item{data_p}{data
 #' matrix with data transformed to a response interval between 0 and 1}
 #' \item{itempar}{estimated item parameters} \item{itempar_se_low}{estimated
@@ -52,12 +48,10 @@
 #'
 #' summary(res_crsm)
 #'
-#' @importFrom cubature adaptIntegrate
-#'
 #' @export CRSM
 #' @rdname crsm
 CRSM <-
-function(data, min, max, method="pair", start, conv=0.0001){
+function(data, min, max, start, conv=0.0001){
 
 call <- match.call()
 
@@ -84,52 +78,7 @@ if(missing(start)){
 
 combis <- combn(ncol(data_p),2)
 
-if(method=="pcml"){
-  #pseudo CML
 
-  if(nrow(data) > 1000 | ncol(data) > 15){cat("warning: pcml estimation method can take some time for a data matrix of this size. Note that the pair method is faster.")}
-
-  cloglik_crsm <- function(para,dataset){
-    si <- colSums(dataset)[-1]   #Itemscores
-    omega <- sum(dataset^2)
-
-    zahler <- as.vector(-si%*%para[1:(ncol(dataset)-1)]-omega*para[ncol(dataset)])
-
-    hilfsvec <- ncol(dataset):2
-
-    nenn <- apply(dataset,1,function(roh){
-      rvec <- cumsum(rev(roh))
-      upperb <- rvec[length(roh)] - c(0,rvec[-c(length(roh),(length(roh)-1))])-(hilfsvec-1)*0
-      lowerb <- rvec[length(roh)] - c(0,rvec[-c(length(roh),(length(roh)-1))])-(hilfsvec-1)*1
-      lowerb2 <- rev(ifelse(lowerb<0, 0,lowerb))
-      upperb2 <- rev(ifelse(upperb>1, 1,upperb))
-
-      integrand <- function(arg){
-        tval <- arg[1:(ncol(dataset)-1)]
-        nennteil <- exp(-tval%*%para[1:(ncol(dataset)-1)]- (rvec[ncol(dataset)]-sum(tval))^2*para[ncol(dataset)] - para[ncol(dataset)]*sum(tval^2))
-        return(nennteil)
-      }
-
-      adaptIntegrate(integrand, lowerLimit=lowerb2, upperLimit=upperb2, tol=0.1)
-
-    }
-    )
-
-    nenner <- sapply(nenn, function(v) v$integral)
-    zahler - sum(log(nenner))
-
-  }
-  parlist <- lapply(1:ncol(combis), function(m) {
-      zwi <- data_p[,c(combis[1,m],combis[2,m])]
-      zwi2 <- zwi[rowSums(zwi)!=0 & rowSums(zwi)!=2,, drop=FALSE] #delete extreme scores
-      optim(para1, fn=cloglik_crsm, dataset=zwi2, control=list(fnscale=-1, maxit=200), method="BFGS", hessian=TRUE)
-  })
-
-  beta       <- sapply(parlist, function(l) l$par[1])*(-1)
-  lambda.all <- sapply(parlist, function(la) la$par[2])
-  iterations <- sapply(parlist, function(it) it$counts)
-
-} else if(method=="pair"){ #pairwise
 
 iterations <- vector(mode="numeric",length=ncol(combis))
 
@@ -186,9 +135,6 @@ parlist <- lapply(1:ncol(combis), function(m) {
 beta       <- sapply(parlist, function(l) l$para1[1])
 lambda.all <- sapply(parlist, function(la) la$para1[2])
 iterations <- sapply(parlist, function(it) it$iterations)
-} else {
-  stop("error: enter correct estimation method or leave it empty for using the default")
-}
 
 #calculate item parameters
 

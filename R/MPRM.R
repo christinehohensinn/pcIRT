@@ -1,18 +1,18 @@
 #' Estimation of Multidimensional Polytomous Rasch model (Rasch, 1961)
-#' 
+#'
 #' This function estimates the multidimensional polytomous Rasch model by Rasch
 #' (1961).  The model estimates item category parameters \eqn{\beta} for each
 #' item and each category and takes each category of data as another dimension.
-#' 
+#'
 #' \deqn{P_{vih} = \frac{exp(\theta_{vh} + \beta_{ih})}{\sum_{j=0}^{m}
 #' exp(\theta_{vj} + \beta_{ij})}}
-#' 
+#'
 #' Parameters are estimated by CML method.
-#' 
+#'
 #' The parameters of the multidimensional polytomous Rasch model (Rasch, 1961)
 #' are estimated by CML estimation. For the CML estimation no assumption on the
 #' person parameter distribution is necessary.
-#' 
+#'
 #' @aliases MPRM summary.MPRM print.MPRM
 #' @param data Data matrix or data frame; rows represent observations
 #' (persons), columns represent the items
@@ -34,38 +34,38 @@
 #' @references Andersen, E. B. (1995). Polytomous Rasch models and their
 #' estimation. In G. H. Fischer and I. Molenaar (Eds.). Rasch Models -
 #' Foundations, Recent Developements, and Applications. Springer.
-#' 
+#'
 #' Fischer, G. H. (1974). Einfuehrung in die Theorie psychologischer Tests
 #' [Introduction to test theory]. Bern: Huber.
-#' 
+#'
 #' Rasch, G. (1961). On general laws and the meaning of measurement in
 #' psychology, Proceedings Fourth Berekely Symposium on Mathematical
 #' Statistiscs and Probability 5, 321-333.
 #' @keywords multidimensional polytomous Rasch model
-#'  
+#'
 #' @useDynLib pcIRT
 #' @importFrom Rcpp evalCpp
 #' @importFrom combinat xsimplex
-#' 
+#'
 #' @rdname mprm
 #' @examples
-#' 
+#'
 #' #simulate data set
 #' simdat <- simMPRM(rbind(matrix(c(-1.5,0.5,0.5,1,0.8,-0.3,
 #'                                   0.2,-1.2), ncol=4),0), 500)
-#' 
+#'
 #' #estimate MPRM item parameters
 #' res_mprm <- MPRM(simdat$datmat)
-#' 
+#'
 #' summary(res_mprm)
-#' 
-#' 
+#'
+#'
 #' @export MPRM
 MPRM <-
 function(data, desmat, start){
 
 call <- match.call()
-  
+
 if(any(diff(as.numeric(names(table(data))),lag=1) != 1)){stop("categories level must be consecutive numbers")}
 
 if(is.data.frame(data)) {data <- as.matrix(data)}
@@ -91,7 +91,7 @@ col.table <- apply(data+1, 2, function(s) tabulate(s,nbins=kateg.zahl))
 #designmatrix
 if(missing(desmat)){
   desmat <- designMPRM(data)
-  } else {desmat <- as.matrix(desmat)} 
+  } else {desmat <- as.matrix(desmat)}
 
 #Startwerte
 
@@ -119,16 +119,16 @@ patt.c <- apply(patmat.o,1,function(p) paste0(sprintf("%04d",p),collapse=""))
 
 cL <- function(para=startval,kateg.zahl=kateg.zahl, item.zahl=item.zahl,col.table=col.table, patmat.o=patmat.o, patt.c=patt.c, patt=patt, desmat=desmat){
   eps <- matrix(exp(desmat %*% para), nrow=kateg.zahl)
-  
+
   fir <- sum(col.table* log(eps))
-  
+
   if(kateg.zahl > 2){
     cf.g <- combfunc(kateg.zahl, item.zahl, eps.mat=t(eps), patmat.o)
-    
+
     ord <- sapply(names(patt), function(hpat) which(patt.c %in% hpat))
     cfg.o <- log(cf.g$gammat[ord])
     sec <- sum(patt*cfg.o,na.rm=T)
-    
+
   } else {
     cf.g <- gamfunk(epsmat=eps[1,])
     sec <- sum(patt[-1] * log(cf.g$gammat), na.rm=T)
@@ -139,46 +139,46 @@ cL <- function(para=startval,kateg.zahl=kateg.zahl, item.zahl=item.zahl,col.tabl
 }
 
 der1 <- function(para=startval, col.table=col.table, kateg.zahl=kateg.zahl, item.zahl=item.zahl, patmat.o=patmat.o, patt=patt, patt.c=patt.c, desmat=desmat){
-  eps <- matrix(exp(as.vector(desmat %*% para)), nrow=kateg.zahl)  
+  eps <- matrix(exp(as.vector(desmat %*% para)), nrow=kateg.zahl)
 
     eps.f <- list(eps)
-  
+
     for (e in seq_len(item.zahl-1)){
       eps.f[[e+1]] <- cbind(eps.f[[e]][,2:item.zahl],eps.f[[e]][,1])
     }
   if(kateg.zahl > 2){
     cf.all <- lapply(eps.f, function(gg) {combfunc(kateg.zahl, item.zahl, eps.mat=t(gg), patmat.o)})
-  
+
   #Vektor raussuchen wo die auftretenden pattern in patt.c vorkommen
-  
+
     ord2 <- sapply(names(patt), function(hpat) which(patt.c %in% hpat))
     cf.o <- lapply(cf.all, function(ln) ln$gam.quot[ord2,])
-  
+
     cf.oNR <- sapply(1:item.zahl, function(l2) {colSums(t(t(cf.o[[l2]]))*as.vector(patt), na.rm=TRUE)})
-  
+
     cf.oNR2 <- cf.oNR*eps[-kateg.zahl,]
   } else {
-    
+
     for (e in seq_len(item.zahl)){
       eps.f[[e+1]] <- cbind(eps.f[[e]][,2:item.zahl],eps.f[[e]][,1])
-    }    
+    }
     eps.f[[1]] <- NULL
 
     cf.all <- lapply(eps.f, function(gg) {gamfunk(epsmat=gg[1,])})
-    
+
     #Vektor raussuchen wo die auftretenden pattern in patt.c vorkommen
-    
+
     #ord2 <- sapply(names(patt), function(hpat) which(patt.c %in% hpat))
     cf.o <- lapply(cf.all, function(ln) ln$gam.quot)
-    
+
     cf.oNR <- sapply(1:item.zahl, function(l2) {colSums(t(t(cf.o[[l2]]))*as.vector(patt[-c(1)]), na.rm=TRUE)})
-    
+
     cf.oNR2 <- cf.oNR*eps[1,]
-    
+
   }
   #von früher ohne Designmatrix
   #as.vector((col.table[-kateg.zahl,-item.zahl] - col.table[-kateg.zahl,item.zahl]) - (cf.oNR2[,-item.zahl] - cf.oNR2[,item.zahl]))
- 
+
   t(desmat[-seq(kateg.zahl,item.zahl*kateg.zahl, by=kateg.zahl),]) %*% as.vector(col.table[-kateg.zahl,] - cf.oNR2)
 }
 
@@ -196,7 +196,7 @@ if(!is.null(colnames(data))){
   colnames(itmat) <- paste("beta item", 1:ncol(itmat))
   colnames(itmat_se) <- paste("SE item", 1:ncol(itmat))
 }
-   
+
 rownames(itmat) <- paste("cat", 1:nrow(itmat))
 rownames(itmat_se) <- paste("cat", 1:nrow(itmat))
 

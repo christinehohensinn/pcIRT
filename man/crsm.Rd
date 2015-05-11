@@ -6,7 +6,7 @@
 \alias{summary.CRSM}
 \title{Estimation of Continuous Rating Scale Model (Mueller, 1987)}
 \usage{
-CRSM(data, min, max, method = "pair", start)
+CRSM(data, min, max, start, conv = 1e-04)
 
 \method{print}{CRSM}(x, ...)
 
@@ -22,11 +22,10 @@ based).}
 \item{max}{The maximum value of the response scale (on which the data are
 based).}
 
-\item{method}{estimation method is either maximization of the pseudo-conditional-maximum-likelihood ("pcml")
-or a pairwise algorithm("pair"), default is "pair"}
-
 \item{start}{Starting values for parameter estimation. If missing, a vector
 of 0 is used as starting values.}
+
+\item{conv}{Convergence criterium for parameter estimation.}
 
 \item{x}{object of class \code{CRSM}}
 
@@ -56,11 +55,9 @@ Estimation of the Rating Scale Model for continuous data by Mueller (1987).
 \deqn{P_{vi}(a \leq X \leq b) = \frac{\int_a^b exp[x \mu + x(2c-x) \theta]
 dx}{\int_{c-\frac{d}{2}}^{c+\frac{d}{2}} exp[t \mu + t(2c-t) \theta] dt}}
 
-Parameters are estimated either by a pairwise conditional likelihood estimation (as pseudo-likelihood approach) or  a pairwise algorithm.
+Parameters are estimated by a pairwise conditional likelihood estimation (a pseudo-likelihood approach, described in Mueller, 1999).
 
-The parameters of the Continuous Rating Scale Model are estimated by a cml approach. a
-pairwise algorithm (the algorithm is described in detail in Mueller, 1999)
-using Newton-Raphson iterations for optimizing.  Alternatively item parameters can be estimated by conditional maximum likelihood estimation. Because of the time-consuming estimation of high-dimensional integrals, a pairwise conditional likelihood estimation is used in this case. For both estimation methods no assumption on the person parameter distribution are necessary. Note, that "pcml" as estimation method is considerably slower than the "pair" method.
+The parameters of the Continuous Rating Scale Model are estimated by a pairwise cml approach using Newton-Raphson iterations for optimizing.
 }
 \examples{
 #estimate CRSM item parameters
