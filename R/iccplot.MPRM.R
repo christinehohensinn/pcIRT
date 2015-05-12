@@ -15,7 +15,7 @@ iccplot.MPRM <- function(object, ...){
         m1 <- exp(pp_comb[,1] - object$itempar[1,l])
         m2 <- exp(pp_comb[,2] - object$itempar[2,l])
 
-        n <- rowSums(cbind(m1,m2, exp(1)))
+        n <- rowSums(cbind(m1,m2, exp(0)))
         respc1 <- m1/n
         respc2 <- m2/n
         r2 <- cbind(respc1, respc2)
