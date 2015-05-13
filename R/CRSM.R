@@ -12,9 +12,9 @@
 #' @aliases CRSM summary.CRSM print.CRSM
 #' @param data Data matrix or data frame; rows represent observations
 #' (persons), columns represent the items.
-#' @param min The minimum value of the response scale (on which the data are
+#' @param low The minimum value of the response scale (on which the data are
 #' based).
-#' @param max The maximum value of the response scale (on which the data are
+#' @param high The maximum value of the response scale (on which the data are
 #' based).
 #' @param start Starting values for parameter estimation. If missing, a vector
 #' of 0 is used as starting values.
@@ -44,26 +44,26 @@
 #'
 #' #estimate CRSM item parameters
 #' data(example1)
-#' res_crsm <- CRSM(example1, min=0, max=1)
+#' res_crsm <- CRSM(example1, low=0, high=1)
 #'
 #' summary(res_crsm)
 #'
 #' @export CRSM
 #' @rdname crsm
 CRSM <-
-function(data, min, max, start, conv=0.0001){
+function(data, low, high, start, conv=0.0001){
 
 call <- match.call()
 
 if(is.data.frame(data)) {data <- as.matrix(data)}
-if(missing(min)){stop("Error: enter lowest possible value of items")}
-if(missing(min)){stop("Error: enter highest possible value of items")}
+if(missing(low)){stop("Error: enter lowest possible value of items")}
+if(missing(high)){stop("Error: enter highest possible value of items")}
 
 # bring data in interval (0,1)
-data_p <- (data - min)/(max-min)
+data_p <- apply(data, 2, function(d) {(d-low)/(high-low)})
 
 #check if few oberservations for item / person
-if (any(apply(data_p, 2, function(dc) sum(dc != 0 & dc != 1)) %in% c(0,1)))
+if (any(apply(data_p, 2, function(dr) sum(dr != 0 & dr != 1)) %in% c(0,1)))
 {cat("warning: there is at least 1 item with only 1 observation containing no extreme rawscore.
      This will probably cause estimation problems")}
 if (any(apply(data_p, 1, function(dc) sum(dc != 0 & dc != 1)) %in% c(0,1)))

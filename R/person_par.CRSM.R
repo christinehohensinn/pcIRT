@@ -4,9 +4,9 @@
 
 person_par.CRSM <-
 function(object, ...){
- 
+
 call <- match.call()
-  
+
 scores <- unique(rowSums(object$data_p))
 scores <- scores[scores != 0 & scores != ncol(object$data)] # extreme scores out
 
@@ -21,11 +21,11 @@ iter       <- 0
 while( !exists("para") || max(abs(para1-para)) > 0.0001 ){
   para <- para1
   iter <- iter+1
-  
+
   Sf <- sapply(para, function(pa){
     s0 <- sapply(object$itempar, function(it) integrate(S0n, paraI=pa, itp=it, lower=0, upper=1, stop.on.error=F)$value)
     s1 <- sapply(object$itempar, function(it) integrate(S1n, paraI=pa, itp=it, lower=0, upper=1, stop.on.error=F)$value)
-    s2 <- sapply(object$itempar, function(it) integrate(S2n, paraI=pa, itp=it, lower=0, upper=1, stop.on.error=F)$value)    
+    s2 <- sapply(object$itempar, function(it) integrate(S2n, paraI=pa, itp=it, lower=0, upper=1, stop.on.error=F)$value)
     su1 <- sum(s1/s0)
     su2 <- sum(s2/s0 - (s1/s0)^2)*(-1)
     list(su1=su1,su2=su2)
@@ -40,7 +40,7 @@ ptable <- cbind(scores,para1,ppse)
 ptableO <- ptable[order(ptable[,1]),]
 colnames(ptable) <- c("raw score", "person par", "se")
 
-pparList <- ptable[match(rowSums(object$data), scores),]
+pparList <- ptable[match(rowSums(object$data_p), scores),]
 
 res_par <- list(ptable=ptableO, pparList=pparList, fun_calls=iter, call=call)
 
