@@ -1,12 +1,12 @@
 #' Estimation of person parameters
-#' 
+#'
 #' This function performs the estimation of person parameters for the
 #' multidimensional polytomous Rasch model or the continuous Rating Scale
 #' model.
-#' 
+#'
 #' The estimation is performed by Maximum Likelihood Estimation. Thus,
 #' parameters for extreme scores are not calculated!
-#' 
+#'
 #' @aliases person_par person_par.MPRM person_par.CRSM
 #' @param object Object of class \code{MPRM} or \code{CRSM}
 #' @param \dots \dots{}
@@ -19,24 +19,24 @@
 #' @seealso \code{\link{CRSM}}
 #' @references Fischer, G. H. (1974). Einfuehrung in die Theorie
 #' psychologischer Tests [Introduction to test theory]. Bern: Huber.
-#' 
+#'
 #' Mueller, H. (1999). Probabilistische Testmodelle fuer diskrete und
 #' kontinuierliche Ratingskalen. [Probabilistic models for discrete and
 #' continuous rating scales]. Bern: Huber.
 #' @keywords person parameter
-#' 
+#'
 #' @rdname perspar
-#' 
+#'
 #' @examples
-#' 
+#'
 #' #estimate CRSM for the first four items
 #' data(example1)
-#' ex_cr <- CRSM(example1[,1:4], min=0, max=1)
-#' 
+#' ex_cr <- CRSM(example1[,1:4], low=0, high=1)
+#'
 #' #estimate person parameters for CRSM
 #' pp <- person_par(ex_cr)
-#' 
-#' 
+#'
+#'
 #' @export person_par
 person_par <-
 function(object,...)UseMethod("person_par")

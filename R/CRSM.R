@@ -30,7 +30,7 @@
 #' errors of estimated distribution parameter} \item{distrpar_se_up}{estimated
 #' upper boundary for standard errors of estimated distribution parameter}
 #' \item{itempar_se}{estimated mean standard errors of estimated distribution
-#' parameter} \item{iterations}{Number of Newton-Raphson iterations for each
+#' parameter} \item{distr_est}{estimated distribution parameters for all item pairs}\item{iterations}{Number of Newton-Raphson iterations for each
 #' item pair} \item{call}{call of the CRSM function}
 #' @author Christine Hohensinn
 #' @references Mueller, H. (1987). A Rasch model for continuous ratings.
@@ -137,6 +137,13 @@ lambda.all <- sapply(parlist, function(la) la$para1[2])
 iterations <- sapply(parlist, function(it) it$iterations)
 
 #calculate item parameters
+if(any(lambda.all <= 0)){
+    cat("warning: at least one distribution parameter is 0 or negativ!")
+}
+
+tc <- t(combis)
+
+lambda_est <- data.frame(item_pair=paste(tc[,1], tc[,2], sep='_'), lambda=lambda.all)
 
 lambda     <- mean(lambda.all)
 
@@ -186,7 +193,7 @@ names(se.distr.mean) <- "SE(lambda)"
 
 
 
-res_all   <- list(data=data, data_p=data_p, itempar=betas,itempar_se_low=se.item.low, itempar_se_up=se.item.up, itempar_se=se.item.mean, distrpar=lambda, distrpar_se_low=se.distr.low, distrpar_se_up=se.distr.up,  distrpar_se=se.distr.mean, iterations=iterations, call=call)
+res_all   <- list(data=data, data_p=data_p, itempar=betas,itempar_se_low=se.item.low, itempar_se_up=se.item.up, itempar_se=se.item.mean, distrpar=lambda, distrpar_se_low=se.distr.low, distrpar_se_up=se.distr.up,  distrpar_se=se.distr.mean, distr_est=lambda_est, iterations=iterations, call=call)
 
 class(res_all) <- "CRSM"
 

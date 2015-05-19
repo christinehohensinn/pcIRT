@@ -1,19 +1,19 @@
 #' Graphical model check
-#' 
+#'
 #' A graphical model check is performed for the multidimensional polytomous
 #' Rasch model or the continuous Rating Scale Model.
-#' 
+#'
 #' The graphical model check plots the item parameter estimates of two
 #' subsamples to check the homogeneity. This is according to the subsample
 #' split in Andersen's Likelihood Ratio test. For conducting the graphical
 #' model check of the MPRM, at first, a \code{\link{LRT}} has to be computed
 #' and the resulting object is the input for the \code{gmc} function.
-#' 
+#'
 #' For plotting a graphical model check for the CRSM, the model has to be
 #' estimated with \code{\link{CRSM}} and subsequently the resulting object is
 #' the input for the \code{gmc} function. For the CRSM a split criterion has to
 #' be input as vector.
-#' 
+#'
 #' @aliases gmc gmc.aLR gmc.CRSM
 #' @param object Object of class \code{aLR} for graphical model check of the
 #' MPRM or object of class \code{CRSM} for graphical model check of the CRSM
@@ -26,20 +26,20 @@
 #' @seealso \code{\link{LRT}} \code{\link{CRSM}}
 #' @references Wright, B.D., and Stone, M.H. (1999). Measurement Essentials.
 #' Wilmington: Wide Range Inc.
-#' 
+#'
 #' @rdname gmc
 #' @keywords graphical model check
 #' @examples
-#' 
+#'
 #' #estimate CRSM for the first three items
 #' data(example1)
-#' res_cr <- CRSM(example1[,1:3], min=0, max=1)
-#' 
-#' #graphical model check for CRSM for the first three items with default split 
+#' res_cr <- CRSM(example1[,1:3], low=0, high=1)
+#'
+#' #graphical model check for CRSM for the first three items with default split
 #' #criterion score
 #' gmc(res_cr)
-#' 
-#' 
+#'
+#'
 #' @export gmc
 gmc <-
 function(object,...)UseMethod("gmc")

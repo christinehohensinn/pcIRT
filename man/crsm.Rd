@@ -6,7 +6,7 @@
 \alias{summary.CRSM}
 \title{Estimation of Continuous Rating Scale Model (Mueller, 1987)}
 \usage{
-CRSM(data, min, max, start, conv = 1e-04)
+CRSM(data, low, high, start, conv = 1e-04)
 
 \method{print}{CRSM}(x, ...)
 
@@ -16,10 +16,10 @@ CRSM(data, min, max, start, conv = 1e-04)
 \item{data}{Data matrix or data frame; rows represent observations
 (persons), columns represent the items.}
 
-\item{min}{The minimum value of the response scale (on which the data are
+\item{low}{The minimum value of the response scale (on which the data are
 based).}
 
-\item{max}{The maximum value of the response scale (on which the data are
+\item{high}{The maximum value of the response scale (on which the data are
 based).}
 
 \item{start}{Starting values for parameter estimation. If missing, a vector
@@ -45,7 +45,7 @@ parameter} \item{distrpar_se_low}{estimated lower boundary for standard
 errors of estimated distribution parameter} \item{distrpar_se_up}{estimated
 upper boundary for standard errors of estimated distribution parameter}
 \item{itempar_se}{estimated mean standard errors of estimated distribution
-parameter} \item{iterations}{Number of Newton-Raphson iterations for each
+parameter} \item{distr_est}{estimated distribution parameters for all item pairs}\item{iterations}{Number of Newton-Raphson iterations for each
 item pair} \item{call}{call of the CRSM function}
 }
 \description{
@@ -62,7 +62,7 @@ The parameters of the Continuous Rating Scale Model are estimated by a pairwise 
 \examples{
 #estimate CRSM item parameters
 data(example1)
-res_crsm <- CRSM(example1, min=0, max=1)
+res_crsm <- CRSM(example1, low=0, high=1)
 
 summary(res_crsm)
 }

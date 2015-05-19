@@ -42,7 +42,7 @@ parameters for extreme scores are not calculated!
 \examples{
 #estimate CRSM for the first four items
 data(example1)
-ex_cr <- CRSM(example1[,1:4], min=0, max=1)
+ex_cr <- CRSM(example1[,1:4], low=0, high=1)
 
 #estimate person parameters for CRSM
 pp <- person_par(ex_cr)

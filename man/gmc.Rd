@@ -42,7 +42,7 @@ be input as vector.
 \examples{
 #estimate CRSM for the first three items
 data(example1)
-res_cr <- CRSM(example1[,1:3], min=0, max=1)
+res_cr <- CRSM(example1[,1:3], low=0, high=1)
 
 #graphical model check for CRSM for the first three items with default split
 #criterion score
