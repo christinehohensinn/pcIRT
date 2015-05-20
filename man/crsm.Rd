@@ -46,7 +46,7 @@ errors of estimated distribution parameter} \item{distrpar_se_up}{estimated
 upper boundary for standard errors of estimated distribution parameter}
 \item{itempar_se}{estimated mean standard errors of estimated distribution
 parameter} \item{distr_est}{estimated distribution parameters for all item pairs}\item{iterations}{Number of Newton-Raphson iterations for each
-item pair} \item{call}{call of the CRSM function}
+item pair} \item{low}{minimal data value entered in call}\item{high}{maximal data value entered in call}\item{call}{call of the CRSM function}
 }
 \description{
 Estimation of the Rating Scale Model for continuous data by Mueller (1987).

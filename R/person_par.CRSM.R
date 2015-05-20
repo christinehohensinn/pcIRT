@@ -37,8 +37,8 @@ while( !exists("para") || max(abs(para1-para)) > 0.0001 ){
 ppse <- sqrt(unlist(Sf[2,])^(-1)*(-1))
 
 ptable <- cbind(scores,para1,ppse)
-ptableO <- ptable[order(ptable[,1]),]
 colnames(ptable) <- c("raw score", "person par", "se")
+ptableO <- ptable[order(ptable[,1]),]
 
 pparList <- ptable[match(rowSums(object$data_p), scores),]
 
