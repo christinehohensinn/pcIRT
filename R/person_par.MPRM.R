@@ -13,7 +13,7 @@ person_par.MPRM <-
 function(object, ..., set0 = FALSE){
 
 call <- match.call()
-  
+
 kateg.zahl <- length(table(object$data))
 item.zahl <- ncol(object$data)
 
@@ -39,21 +39,21 @@ if(set0 == FALSE){
       patt2   <- patt[-out]
       fixP    <- which(as.vector(rto2[-kateg.zahl,])==0)
       startv  <- rep(0, length(as.vector(rto2[-kateg.zahl,])[-fixP]))
-    } 
+    }
 
 estpar <- object$itempar[-kateg.zahl, -item.zahl]*(-1)
 
 pl <- function(perspv=startv, rto=rto2, patt=patt2, estpar=estpar, col.table=col.table, fixP=fixP){
 
 newp <- numeric(length(perspv)+length(fixP))
-newp[fixP] <- -1000 
+newp[fixP] <- -1000
 newp[newp != -1000] <- perspv
 
 perspar <- cbind(matrix(newp, ncol=nrow(rto)-1, nrow=ncol(rto), byrow=TRUE),rep(0,ncol(rto)))
-  
+
 fir <- sum(rowSums(perspar*t(rto))*patt)
 
-itmat <- cbind(rbind(matrix(estpar, nrow=nrow(rto)-1), rep(0, item.zahl-1)), rep(0, nrow(rto)))  
+itmat <- cbind(rbind(matrix(estpar, nrow=nrow(rto)-1), rep(0, item.zahl-1)), rep(0, nrow(rto)))
 
 sec <- sum(itmat*col.table)
 
@@ -70,25 +70,25 @@ fir + sec - thir
 }
 
 der1pl <- function(perspv=startv, rto=rto2, patt=patt2, estpar=estpar, col.table=col.table, fixP=fixP){
-  
+
   newp <- numeric(length(perspv)+length(fixP))
-  newp[fixP] <- -1000 
+  newp[fixP] <- -1000
   newp[newp != -1000] <- perspv
-  
+
   perspar <- cbind(matrix(newp, ncol=nrow(rto)-1, nrow=ncol(rto), byrow=TRUE),rep(0,ncol(rto)))
-  
-  itmat <- cbind(rbind(matrix(estpar, nrow=nrow(rto)-1), rep(0, item.zahl-1)), rep(0, nrow(rto)))  
-  
+
+  itmat <- cbind(rbind(matrix(estpar, nrow=nrow(rto)-1), rep(0, item.zahl-1)), rep(0, nrow(rto)))
+
   difz <- exp(mapply(function(pp,it) {perspar[pp,]+itmat[,it]}, pp=rep(seq_len(ncol(rto)), each=item.zahl), it=rep(seq_len(ncol(itmat)), ncol(rto))))
   lauf <- seq(1,ncol(difz), by=ncol(itmat))
   difz2 <- colSums(difz)
   difz3 <- t(apply(difz, 1, function(ze) {ze/difz2}))
   za <- rowSums(difz3[,1:(ncol(itmat))])
-  
+
   for (i in lauf[-1]){
     za <- cbind(za,rowSums(difz3[,i:(i+ncol(itmat)-1)]))
-  } 
-  
+  }
+
   if(is.null(fixP)){
     as.vector(rto[-kateg.zahl,]) - as.vector(za[-kateg.zahl,])
   } else {
@@ -103,7 +103,7 @@ persest <- optim(startv, pl, gr=der1pl, rto=rto2, patt=patt2, estpar=estpar, col
 param <- numeric(length(persest$par)+length(fixP))
 ppse <- diag(solve(persest$hessian)*(-1))
 ppse <- numeric(length(param))
-param[fixP] <- -1000 
+param[fixP] <- -1000
 #ppse[fixP] <- 0
 ppse[param != -1000] <-  diag(solve(persest$hessian)*(-1))
 param[param != -1000] <- persest$par
@@ -113,10 +113,10 @@ ptableSE <- matrix(ppse, ncol=nrow(rto2)-1, nrow=ncol(rto2), byrow=TRUE)
 
 ptable <- cbind(ptablePP, ptableSE)
 
-row.names(ptable) <- apply(rto2,2, function(n) paste0(n, collapse="")) 
+row.names(ptable) <- apply(rto2,2, function(n) paste0(n, collapse="|"))
 colnames(ptable) <- c(paste(rep("pers.par.cat",kateg.zahl), 1:kateg.zahl, sep=""),paste(rep("se cat", kateg.zahl-1),1:(kateg.zahl-1)))
 
-pvec <- apply(row.table1,2, function(n2) paste0(n2, collapse=""))
+pvec <- apply(row.table1,2, function(n2) paste0(n2, collapse="|"))
 
 pparList <- ptable[match(pvec,rownames(ptable)),]
 
