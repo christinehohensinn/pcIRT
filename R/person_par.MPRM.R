@@ -2,7 +2,7 @@
 #' observations (except in the reference category) the person parameter value
 #' is set minimal. With this procedure it is possible to estimate at least the
 #' remaining person parameters of these raw score pattern.  Note: only relevant
-#' for person parameter estimation of MPRM.
+#' for person parameter estimation of MPRM. The person parameters for each raw score vector are constrained to sum zero
 
 #'@rdname perspar
 #'@method person_par MPRM
@@ -118,9 +118,13 @@ colnames(ptable) <- c(paste(rep("pers.par.cat",kateg.zahl), 1:kateg.zahl, sep=""
 
 pvec <- apply(row.table1,2, function(n2) paste0(n2, collapse="|"))
 
-pparList <- ptable[match(pvec,rownames(ptable)),]
+ptable2 <- t(apply(ptable, 1, function(p1) scale(p1[1:3], scale=FALSE)))
+ptable3 <- cbind(ptable2, ptable[,4:5])
+colnames(ptable3) <- colnames(ptable)
 
-res_par <- list(ptable=ptable, pparList=pparList,fun_calls=persest$counts, call=call)
+pparList <- ptable3[match(pvec,rownames(ptable3)),]
+
+res_par <- list(ptable=ptable3, pparList=pparList,fun_calls=persest$counts, call=call)
 
 class(res_par) <- "person_par"
 

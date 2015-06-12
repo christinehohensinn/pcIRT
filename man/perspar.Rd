@@ -19,7 +19,7 @@ person_par(object, ...)
 observations (except in the reference category) the person parameter value
 is set minimal. With this procedure it is possible to estimate at least the
 remaining person parameters of these raw score pattern.  Note: only relevant
-for person parameter estimation of MPRM.}
+for person parameter estimation of MPRM. The person parameters for each raw score vector are constrained to sum zero}
 
 \item{\dots}{\dots{}}
 }
