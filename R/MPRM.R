@@ -45,6 +45,9 @@
 #' parameters (see details)
 #' @param start Starting values for parameter estimation. If missing, a vector
 #' of 0 is used as starting values.
+#' @param control list with control parameters for the estimation process e.g. the convergence criterion. For details please see the help pages to the R built-in function \code{optim}
+
+#'
 #' @return \item{data}{data matrix according to the input} \item{design}{design
 #' matrix according to the input} \item{logLikelihood}{conditional
 #' log-likelihood} \item{estpar}{estimated basic item category parameters}
@@ -105,7 +108,7 @@
 #'
 #' @export MPRM
 MPRM <-
-  function(data, desmat, ldes,lp, start){
+  function(data, desmat, ldes,lp, start, control){
 
     call <- match.call()
 
@@ -135,6 +138,10 @@ MPRM <-
     if(missing(desmat)){
       desmat <- designMPRM(data)
     } else {desmat <- as.matrix(desmat)}
+
+    #control parameters for optim
+    if(missing(control)){
+      control <- list(fnscale=-1, maxit=1000)}
 
 
     #pattern
@@ -223,12 +230,13 @@ MPRM <-
        t(desmat[-seq(kateg.zahl,item.zahl*kateg.zahl, by=kateg.zahl),]) %*% as.vector(col.table[-kateg.zahl,] - cf.oNR2)
      }
 
-     res <- optim(startval, cL,gr=der1, kateg.zahl=kateg.zahl, item.zahl=item.zahl,col.table=col.table, patmat.o=patmat.o,patt.c=patt.c, patt=patt, desmat=desmat, method="BFGS", control=list(maxit=500, fnscale=-1), hessian=TRUE)
+     res <- optim(startval, cL,gr=der1, kateg.zahl=kateg.zahl, item.zahl=item.zahl,col.table=col.table, patmat.o=patmat.o,patt.c=patt.c, patt=patt, desmat=desmat, method="BFGS", control=control, hessian=TRUE)
 
      estpar_se <- sqrt(diag(solve(res$hessian*(-1))))
 
      itmat <- matrix(as.vector(desmat %*% res$par), nrow=kateg.zahl)
-     itmat_se <- matrix(sqrt(diag(desmat %*% solve(res$hessian*(-1)) %*% t(desmat))), nrow=kateg.zahl)
+     #itmat_se <- matrix(sqrt(diag(desmat %*% solve(res$hessian*(-1)) %*% t(desmat))), nrow=kateg.zahl)
+     itmat_se <- cbind(rbind(matrix(estpar_se, (nrow=kateg.zahl-1)), NA),NA)
 
      if(!is.null(colnames(data))){
        colnames(itmat) <- paste("beta", colnames(data))
@@ -278,7 +286,7 @@ MPRM <-
       fir-sec
     }
 
-res <- optim(startval, cLr, kateg.zahl=kateg.zahl, item.zahl=item.zahl,col.table=col.table, patmat.o=patmat.o,patt.c=patt.c, patt=patt, desmat=desmat, ldes=ldes, lp=lp,method="BFGS", control=list(maxit=500, fnscale=-1), hessian=TRUE)
+res <- optim(startval, cLr, kateg.zahl=kateg.zahl, item.zahl=item.zahl,col.table=col.table, patmat.o=patmat.o,patt.c=patt.c, patt=patt, desmat=desmat, ldes=ldes, lp=lp,method="BFGS", control=control, hessian=TRUE)
 
 
     estpar_se <- sqrt(diag(solve(res$hessian*(-1))))
@@ -292,22 +300,23 @@ res <- optim(startval, cLr, kateg.zahl=kateg.zahl, item.zahl=item.zahl,col.table
     itmat_se <- matrix(sqrt(diag(desmat %*% solve(res$hessian[-c((length(res$par)-max(lp)+1):length(res$par)),-c((length(res$par)-max(lp)+1):length(res$par))]*(-1)) %*% t(desmat))), nrow=kateg.zahl)
 
     itmat <- matrix(as.vector(fmat), nrow=kateg.zahl)
+    itmatf <- t(sapply(1:nrow(itmat), function(s) itmat[s,]-mean(itmat[s,])))
 
     if(!is.null(colnames(data))){
-      colnames(itmat) <- paste("beta", colnames(data))
+      colnames(itmatf) <- paste("beta", colnames(data))
       colnames(itmat_se) <- paste("SE", colnames(data))
     } else {
-      colnames(itmat) <- paste("beta item", 1:ncol(itmat))
+      colnames(itmatf) <- paste("beta item", 1:ncol(itmat))
       colnames(itmat_se) <- paste("SE item", 1:ncol(itmat))
     }
 
-    rownames(itmat) <- paste("cat", 1:nrow(itmat))
+    rownames(itmatf) <- paste("cat", 1:nrow(itmat))
     rownames(itmat_se) <- paste("cat", 1:nrow(itmat))
 
     linpar <- res$par[c((length(res$par)-max(lp)+1):length(res$par))]
     linpar_se <- estpar_se[c((length(res$par)-max(lp)+1):length(res$par))]
 
-    res_all <- list(data=data, design=desmat, logLikelihood=res$value, estpar=res$par, estpar_se=estpar_se, itempar=itmat*(-1), itempar_se=itmat_se, linpar=linpar,
+    res_all <- list(data=data, design=desmat, logLikelihood=res$value, estpar=res$par, estpar_se=estpar_se, itempar=itmatf*(-1), itempar_se=itmat_se, linpar=linpar,
 linpar_se=linpar_se, hessian=res$hessian, convergence=res$convergence, fun_calls=res$counts, call=call)
    }
 

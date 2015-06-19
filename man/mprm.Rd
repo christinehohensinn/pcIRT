@@ -6,7 +6,7 @@
 \alias{summary.MPRM}
 \title{Estimation of Multidimensional Polytomous Rasch model (Rasch, 1961)}
 \usage{
-MPRM(data, desmat, ldes, lp, start)
+MPRM(data, desmat, ldes, lp, start, control)
 
 \method{print}{MPRM}(x, ...)
 
@@ -28,6 +28,8 @@ parameters (see details)}
 
 \item{start}{Starting values for parameter estimation. If missing, a vector
 of 0 is used as starting values.}
+
+\item{control}{list with control parameters for the estimation process e.g. the convergence criterion. For details please see the help pages to the R built-in function \code{optim}}
 
 \item{x}{object of class \code{MPRM}}
 

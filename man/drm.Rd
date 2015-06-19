@@ -6,7 +6,7 @@
 \alias{summary.DRM}
 \title{Estimation of dichotomous logistic Rasch model (Rasch, 1960)}
 \usage{
-DRM(data, desmat, start)
+DRM(data, desmat, start, control)
 
 \method{print}{DRM}(x, ...)
 
@@ -19,6 +19,8 @@ DRM(data, desmat, start)
 \item{desmat}{Design matrix; if missing, the design matrix for a dichotomous Rasch model will be created automatically.}
 
 \item{start}{starting values for parameter estimation. If missing, a vector of 0 is used as starting values.}
+
+\item{control}{list with control parameters for the estimation process e.g. the convergence criterion. For details please see the help pages to the R built-in function \code{optim}}
 
 \item{x}{object of class \code{DRM}}
 

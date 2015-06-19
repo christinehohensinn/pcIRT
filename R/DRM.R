@@ -9,6 +9,7 @@
 #' (persons), columns represent the items.
 #' @param desmat Design matrix; if missing, the design matrix for a dichotomous Rasch model will be created automatically.
 #' @param start starting values for parameter estimation. If missing, a vector of 0 is used as starting values.
+#' @param control list with control parameters for the estimation process e.g. the convergence criterion. For details please see the help pages to the R built-in function \code{optim}
 #'
 #' @return \item{data}{data matrix according to the input} \item{design}{design
 #' matrix either according to the input or according to the automatically
@@ -41,7 +42,7 @@
 #'
 #'
 DRM <-
-  function(data, desmat, start){
+  function(data, desmat, start, control){
 
 call <- match.call()
 
@@ -65,7 +66,7 @@ if(missing(start)){
 }
 
 if(missing(desmat)){
-  desmat <- rbind(-1,diag(1,nrow=length(para)))
+  desmat <- rbind(diag(1,nrow=length(para)),-1)
 }
 
 cmlLoglik <- function(sigs, si, roh, desmat){
@@ -79,7 +80,9 @@ cmlLoglik <- function(sigs, si, roh, desmat){
   term1-term2
 }
 
-res <- optim(para, fn=cmlLoglik, si=si.r, roh=fr.r,desmat=desmat, control=list(fnscale=-1, maxit=1000), hessian=TRUE, method="L-BFGS-B")
+if(missing(control)){
+  control <- list(fnscale=-1, maxit=1000)}
+res <- optim(para, fn=cmlLoglik, si=si.r, roh=fr.r,desmat=desmat, control=control, hessian=TRUE, method="L-BFGS-B")
 
 # normalize item parameters
 itempar <- as.vector(desmat %*% res$par)
@@ -87,8 +90,8 @@ itempar <- as.vector(desmat %*% res$par)
 #SE
 estpar_se <- sqrt(diag(solve(res$hessian*(-1))))
 
-itempar_se <- sqrt(diag(desmat %*% solve(res$hessian*(-1)) %*% t(desmat)))
-
+#itempar_se <- sqrt(diag(desmat %*% solve(res$hessian*(-1)) %*% t(desmat)))
+itempar_se <- c(estpar_se,NA)
 
 if(!is.null(colnames(data))){
   names(itempar) <- paste("beta", colnames(data))
