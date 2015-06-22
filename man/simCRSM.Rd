@@ -4,12 +4,12 @@
 \alias{simCRSM}
 \title{simulate data according to CRSM}
 \usage{
-simCRSM(itempar, distr, perspar, mid = 0.5, len = 1, seed = NULL)
+simCRSM(itempar, disp, perspar, mid = 0.5, len = 1, seed = NULL)
 }
 \arguments{
 \item{itempar}{a numerical vector with item parameters}
 
-\item{distr}{a number setting the distribution parameter for the item set}
+\item{disp}{a number setting the dispersion parameter for the item set}
 
 \item{perspar}{a numerical vector with the person parameters}
 
@@ -23,8 +23,8 @@ generated)}
 }
 \value{
 \item{datmat}{simulated data set} \item{true_itempar}{the fixed item
-parameters according to the input} \item{true_distrpar}{the fixed
-distribution parameter according to the input} \item{true_perspar}{the fixed
+parameters according to the input} \item{true_disppar}{the fixed
+dispersion parameter according to the input} \item{true_perspar}{the fixed
 person parameters according to the input}
 }
 \description{
@@ -40,10 +40,10 @@ a response scale between 0 and 1 - that is midpoint 0.5 and length 1.
 #set item parameters
 item_p <- c(-1.5,-0.5,0.5,1)
 
-#set distribution parameter for items
+#set dispersion parameter for items
 dis_p <- 5
 
-#generate person parameters by a standard normal distribution
+#generate person parameters by a standard normal dispersion
 pp <- rnorm(50, 0,1)
 
 #simulate data set

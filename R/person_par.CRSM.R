@@ -10,9 +10,9 @@ call <- match.call()
 scores <- unique(rowSums(object$data_p))
 scores <- scores[scores != 0 & scores != ncol(object$data)] # extreme scores out
 
-S0n <- function(t, paraI, itp)       {exp(t*(paraI - itp) + t*(1-t)*object$distrpar)}
-S1n <- function(t, paraI, itp) {t*   exp(t*(paraI - itp) + t*(1-t)*object$distrpar)}
-S2n <- function(t, paraI, itp) {t^2* exp(t*(paraI - itp) + t*(1-t)*object$distrpar)}
+S0n <- function(t, paraI, itp)       {exp(t*(paraI - itp) + t*(1-t)*object$disppar)}
+S1n <- function(t, paraI, itp) {t*   exp(t*(paraI - itp) + t*(1-t)*object$disppar)}
+S2n <- function(t, paraI, itp) {t^2* exp(t*(paraI - itp) + t*(1-t)*object$disppar)}
 
 #starting values
 para1      <- rep(0, length(scores))

@@ -40,12 +40,12 @@ matrix with data transformed to a response interval between 0 and 1}
 lower boundary for standard errors of estimated item parameters}
 \item{itempar_se_up}{estimated upper boundary for standard errors of
 estimated item parameters} \item{itempar_se}{estimated mean standard errors
-of estimated item parameters} \item{distrpar}{estimated distribution
-parameter} \item{distrpar_se_low}{estimated lower boundary for standard
-errors of estimated distribution parameter} \item{distrpar_se_up}{estimated
-upper boundary for standard errors of estimated distribution parameter}
-\item{itempar_se}{estimated mean standard errors of estimated distribution
-parameter} \item{distr_est}{estimated distribution parameters for all item pairs}\item{iterations}{Number of Newton-Raphson iterations for each
+of estimated item parameters} \item{disppar}{estimated dispersion
+parameter} \item{disppar_se_low}{estimated lower boundary for standard
+errors of estimated dispersion parameter} \item{disppar_se_up}{estimated
+upper boundary for standard errors of estimated dispersion parameter}
+\item{itempar_se}{estimated mean standard errors of estimated item
+parameter} \item{disp_est}{estimated dispersion parameters for all item pairs}\item{iterations}{Number of Newton-Raphson iterations for each
 item pair} \item{low}{minimal data value entered in call}\item{high}{maximal data value entered in call}\item{call}{call of the CRSM function}
 }
 \description{

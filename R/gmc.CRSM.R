@@ -19,12 +19,12 @@ function(object, splitcrit="score", ...){
 
   itempar_split <- sapply(sp_res, function(re) list(re$itempar))
   itemse_split <- sapply(sp_res, function(re) list(re$se.item.mean))
-  lambda_split <- sapply(sp_res, function(re) re$distrpar)
+  lambda_split <- sapply(sp_res, function(re) re$disppar)
 
   plot(itempar_split[[1]], itempar_split[[2]], type="p", pch=20, xlab="item par. group 1", ylab="item par. group 2", xlim=c(-ceiling(max(abs(unlist(itempar_split)))),ceiling(max(abs(unlist(itempar_split))))), ylim=c(-ceiling(max(abs(unlist(itempar_split)))),ceiling(max(abs(unlist(itempar_split))))))
   abline(0,1)
   text(itempar_split[[1]], itempar_split[[2]], labels=colnames(sp_dat[[1]]), pos=1)
 
-  cat(" \t Distrpar Group 1: ", lambda_split[1], "\n",
-      "\t Distrpar Group 2: ", lambda_split[2])
+  cat(" \t Disppar Group 1: ", lambda_split[1], "\n",
+      "\t Disppar Group 2: ", lambda_split[2])
 }

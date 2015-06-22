@@ -7,7 +7,7 @@ iccplot.CRSM <- function(object, ...){
   pp <- seq(-30,30, by=1)
   rs <- seq(0,1, by=0.05)
   pp_rs <- expand.grid(theta = pp, resp = rs)
-  func <- function(x, per, itpar){exp(x*(per-itpar) + x*(1-x)*object$distrpar)}
+  func <- function(x, per, itpar){exp(x*(per-itpar) + x*(1-x)*object$disppar)}
 
   par(ask=TRUE)
   z2 <- sapply(1:length(object$itempar), function(l){
