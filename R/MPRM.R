@@ -337,7 +337,7 @@ res <- optim(startval, cLr, kateg.zahl=kateg.zahl, item.zahl=item.zahl,col.table
     linpar <- res$par[c((length(res$par)-max(lp)+1):length(res$par))]
     linpar_se <- estpar_se[c((length(res$par)-max(lp)+1):length(res$par))]
 
-    res_all <- list(data=data, design=desmat, logLikelihood=res$value, estpar=res$par, estpar_se=estpar_se, itempar=itmatf*(-1), itempar_se=itmat_se, linpar=linpar,
+    res_all <- list(data=data, design=desmat, logLikelihood=res$value, estpar=res$par, estpar_se=estpar_se, itempar=itmat*(-1), itempar_se=itmat_se, linpar=linpar,
 linpar_se=linpar_se, hessian=res$hessian, convergence=res$convergence, fun_calls=res$counts, call=call)
    }
 
