@@ -141,7 +141,8 @@ MPRM <-
 
     #control parameters for optim
     if(missing(control)){
-      control <- list(fnscale=-1, maxit=1000)}
+      control <- list(fnscale=-1, maxit=1000)
+    }
 
 
     #pattern
@@ -289,28 +290,48 @@ MPRM <-
 res <- optim(startval, cLr, kateg.zahl=kateg.zahl, item.zahl=item.zahl,col.table=col.table, patmat.o=patmat.o,patt.c=patt.c, patt=patt, desmat=desmat, ldes=ldes, lp=lp,method="BFGS", control=control, hessian=TRUE)
 
 
-    estpar_se <- sqrt(diag(solve(res$hessian*(-1))))
+  estpar_se <- sqrt(diag(solve(res$hessian*(-1))))
 
-    fmat <- desmat %*% res$par[-c((length(res$par)-max(lp)+1):length(res$par))]
+#design matrix with linear dependent parameters
+  lpn <- res$par[c((length(res$par)-max(lp)+1):length(res$par))][lp]
+  ldesn <- ldes
+  ldesn[ldesn!=0] <- lpn
+  ldesn[ldesn==0] <- NA
+  dplug <- desmat
+  dplug <- apply(desmat, 2, function(m) ldesn*m)
+  kateg.lp <- c(which(ldesn!=0)[1],diff(which(ldesn!=0))-1)
+  ldesmat <- matrix(ldesn,nrow=3)
+  coldes <- which(apply(ldesmat, 2, function(m2) any(!is.na(m2))))
+  for(i in 1:length(kateg.lp)){
+    dplug[(nrow(desmat)-kateg.lp[i]+1), coldes[i]] <- -lpn[i]
+  }
+  dplug2 <- desmat
+  dplug2[dplug!=0 & !is.na(dplug)] <- dplug[dplug!=0 & !is.na(dplug)]
 
-    for(k in seq_along(lp)){
-      fmat[ldes!=0][k] <- fmat[ldes[ldes!=0][k]]*(res$par[c((length(res$par)-max(lp)+1):length(res$par))][lp[k]])
-    }
+  fmat <- dplug2 %*% res$par[-c((length(res$par)-max(lp)+1):length(res$par))]
 
-    itmat_se <- matrix(sqrt(diag(desmat %*% solve(res$hessian[-c((length(res$par)-max(lp)+1):length(res$par)),-c((length(res$par)-max(lp)+1):length(res$par))]*(-1)) %*% t(desmat))), nrow=kateg.zahl)
+#    for(k in seq_along(lp)){
+#      fmat[ldes!=0][k] <- fmat[ldes[ldes!=0][k]]*(res$par[c((length(res$par)-max(lp)+1):length(res$par))][lp[k]])
+#    }
+
+
+    #itmat_se <- matrix(sqrt(diag(desmat %*% solve(res$hessian[-c((length(res$par)-max(lp)+1):length(res$par)),-c((length(res$par)-max(lp)+1):length(res$par))]*(-1)) %*% t(desmat))), nrow=kateg.zahl)
+    lz <- as.vector(ldesmat[-kateg.zahl,-item.zahl])
+    itmat_se <- rep(NA, length(lz))
+    itmat_se[is.na(lz)] <- estpar_se[-c((length(res$par)-max(lp)+1):length(res$par))]
+    itmat_se <- rbind(cbind(matrix(itmat_se, nrow=kateg.zahl-1),NA),NA)
 
     itmat <- matrix(as.vector(fmat), nrow=kateg.zahl)
-    itmatf <- t(sapply(1:nrow(itmat), function(s) itmat[s,]-mean(itmat[s,])))
 
     if(!is.null(colnames(data))){
-      colnames(itmatf) <- paste("beta", colnames(data))
+      colnames(itmat) <- paste("beta", colnames(data))
       colnames(itmat_se) <- paste("SE", colnames(data))
     } else {
-      colnames(itmatf) <- paste("beta item", 1:ncol(itmat))
+      colnames(itmat) <- paste("beta item", 1:ncol(itmat))
       colnames(itmat_se) <- paste("SE item", 1:ncol(itmat))
     }
 
-    rownames(itmatf) <- paste("cat", 1:nrow(itmat))
+    rownames(itmat) <- paste("cat", 1:nrow(itmat))
     rownames(itmat_se) <- paste("cat", 1:nrow(itmat))
 
     linpar <- res$par[c((length(res$par)-max(lp)+1):length(res$par))]
