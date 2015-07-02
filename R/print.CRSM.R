@@ -11,8 +11,8 @@ function(x, ...){
 
   cat("\n Call: ", deparse(x$call), "\n\n")
 
-    parall <- rbind(cbind("item estimates"=x$itempar, "SE"=x$se.item.mean), "lambda"=c(x$disppar, x$se.distr.mean))
-      parall <- rbind(cbind("item estimates"=x$itempar, "SE"=x$itempar_se),"lambda"=c(x$disppar, x$disppar_se) )
+    parall <- rbind(cbind("item estimates"=x$itempar, "SE"=x$se.item.mean), "dispp"=c(x$disppar, x$se.distr.mean))
+      parall <- rbind(cbind("item estimates"=x$itempar, "SE"=x$itempar_se),"dispp"=c(x$disppar, x$disppar_se) )
 
   cat("Parameter estimates: \n")
   print(parall)

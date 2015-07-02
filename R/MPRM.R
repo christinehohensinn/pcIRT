@@ -266,10 +266,27 @@ MPRM <-
 
     cLr <- function(para=startval,kateg.zahl=kateg.zahl, item.zahl=item.zahl,col.table=col.table, patmat.o=patmat.o, patt.c=patt.c, patt=patt, desmat=desmat, ldes=ldes, lp=lp){
 
-      fmat <- desmat %*% para[-c((length(para)-max(lp)+1):length(para))]
-      for(k in seq_along(lp)){
-        fmat[ldes!=0][k] <- fmat[ldes[ldes!=0][k]]*(para[c((length(para)-max(lp)+1):length(para))][lp[k]])
+      lpn <- para[c((length(para)-max(lp)+1):length(para))][lp]
+      ldesn <- ldes
+      ldesn[ldesn!=0] <- lpn
+      ldesn[ldesn==0] <- NA
+      dplug <- desmat
+      dplug <- apply(desmat, 2, function(m) ldesn*m)
+      kateg.lp <- c(which(ldesn!=0)[1],diff(which(ldesn!=0))-1)
+      ldesmat <- matrix(ldesn,nrow=3)
+      coldes <- which(apply(ldesmat, 2, function(m2) any(!is.na(m2))))
+      for(i in 1:length(kateg.lp)){
+        dplug[(nrow(desmat)-kateg.lp[i]+1), coldes[i]] <- -lpn[i]
       }
+      dplug2 <- desmat
+      dplug2[dplug!=0 & !is.na(dplug)] <- dplug[dplug!=0 & !is.na(dplug)]
+
+      fmat <- dplug2 %*% para[-c((length(para)-max(lp)+1):length(para))]
+
+      #fmat <- desmat %*% para[-c((length(para)-max(lp)+1):length(para))]
+      #for(k in seq_along(lp)){
+      #  fmat[ldes!=0][k] <- fmat[ldes[ldes!=0][k]]*(para[c((length(para)-max(lp)+1):length(para))][lp[k]])
+      #}
 
       eps <- matrix(exp(fmat), nrow=kateg.zahl)
       fir <- sum(col.table* log(eps))

@@ -114,7 +114,7 @@ ptableSE <- matrix(ppse, ncol=nrow(rto2)-1, nrow=ncol(rto2), byrow=TRUE)
 ptable <- cbind(ptablePP, ptableSE)
 
 row.names(ptable) <- apply(rto2,2, function(n) paste0(n, collapse="|"))
-colnames(ptable) <- c(paste(rep("pers.par.cat",kateg.zahl), 1:kateg.zahl, sep=""),paste(rep("se cat", kateg.zahl-1),1:(kateg.zahl-1)))
+colnames(ptable) <- c(paste(rep("pers.par.cat",kateg.zahl), 1:kateg.zahl, sep=""),paste(rep("SE cat", kateg.zahl-1),1:(kateg.zahl-1)))
 
 pvec <- apply(row.table1,2, function(n2) paste0(n2, collapse="|"))
 
