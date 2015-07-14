@@ -61,8 +61,8 @@ The parameters of the Continuous Rating Scale Model are estimated by a pairwise 
 }
 \examples{
 #estimate CRSM item parameters
-data(example1)
-res_crsm <- CRSM(example1, low=0, high=1)
+data(analog)
+res_crsm <- CRSM(extraversion, low=-10, high=10)
 
 summary(res_crsm)
 }

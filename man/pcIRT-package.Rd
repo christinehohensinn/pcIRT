@@ -4,10 +4,10 @@
 \name{pcIRT-package}
 \alias{pcIRT}
 \alias{pcIRT-package}
-\title{IRT models for polytomous and continuous item responses}
+\title{IRT Models for Polytomous and Continuous Item Responses}
 \description{
-This package estimates the multidimensional polytomous Rasch model (Rasch,
-1961) and provides functions to set linear restrictions on the item category
+The multidimensional polytomous Rasch model (Rasch,
+1961) can be estimated with pcIRT. It provides functions to set linear restrictions on the item category
 parameters of this models. With this functions it is possible to test
 whether item categories can be collapsed or set as linear dependent. Thus it
 is also possible to test whether the multidimensional model can be reduced

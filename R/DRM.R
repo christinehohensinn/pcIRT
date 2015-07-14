@@ -35,8 +35,8 @@
 #' @examples
 #'
 #' #estimate Rasch model parameters
-#' data(example3)
-#' res_drm <- DRM(example3)
+#' data(reason)
+#' res_drm <- DRM(reason.test[,1:11])
 #'
 #' summary(res_drm)
 #'

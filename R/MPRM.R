@@ -225,8 +225,7 @@ MPRM <-
          cf.oNR2 <- cf.oNR*eps[1,]
 
        }
-       #von früher ohne Designmatrix
-       #as.vector((col.table[-kateg.zahl,-item.zahl] - col.table[-kateg.zahl,item.zahl]) - (cf.oNR2[,-item.zahl] - cf.oNR2[,item.zahl]))
+
 
        t(desmat[-seq(kateg.zahl,item.zahl*kateg.zahl, by=kateg.zahl),]) %*% as.vector(col.table[-kateg.zahl,] - cf.oNR2)
      }

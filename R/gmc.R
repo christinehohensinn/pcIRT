@@ -32,8 +32,8 @@
 #' @examples
 #'
 #' #estimate CRSM for the first three items
-#' data(example1)
-#' res_cr <- CRSM(example1[,1:3], low=0, high=1)
+#' data(analog)
+#' res_cr <- CRSM(extraversion, low=-10, high=10)
 #'
 #' #graphical model check for CRSM for the first three items with default split
 #' #criterion score

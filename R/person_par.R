@@ -30,11 +30,11 @@
 #' @examples
 #'
 #' #estimate CRSM for the first four items
-#' data(example1)
-#' ex_cr <- CRSM(example1[,1:4], low=0, high=1)
+#' data(analog)
+#' res_cr <- CRSM(extraversion, low=-10, high=10)
 #'
 #' #estimate person parameters for CRSM
-#' pp <- person_par(ex_cr)
+#' pp <- person_par(res_cr)
 #'
 #'
 #' @export person_par
