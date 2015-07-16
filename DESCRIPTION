@@ -2,7 +2,7 @@ Package: pcIRT
 Type: Package
 Title: IRT Models for Polytomous and Continuous Item Responses
 Version: 0.2
-Date: 2015-07-14
+Date: 2015-07-15
 Author: Christine Hohensinn
 Maintainer: Christine Hohensinn <christine.hohensinn@univie.ac.at>
 Depends:
