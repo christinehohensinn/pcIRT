@@ -70,6 +70,9 @@ NULL
 #' Statistiscs and Probability 5, 321-333.
 #' @keywords package IRT Item Response Theory psychometrics multidimensional
 #' polytomous Rasch model Continuous Rating Scale Model
+#' 
+#' @import stats graphics grDevices utils methods
+#' 
 #' @examples
 #'
 #' #simulate data set according to the multidimensional polytomous Rasch model (MPRM)

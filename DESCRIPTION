@@ -6,13 +6,18 @@ Date: 2015-07-15
 Author: Christine Hohensinn
 Maintainer: Christine Hohensinn <christine.hohensinn@univie.ac.at>
 Depends:
-    R (>= 2.15),
-    combinat
+    R (>= 2.15)
 Suggests:
     roxygen2
 LinkingTo: Rcpp
 Imports:
-    Rcpp
+    Rcpp,
+    combinat,
+    stats,
+    graphics,
+    grDevices,
+    utils,
+    methods
 Description: pcIRT estimates the multidimensional polytomous Rasch model
     (Rasch, 1961) and the Continous Rating Scale model (Mueller, 1987).
 License: GPL-3
