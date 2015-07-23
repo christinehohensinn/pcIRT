@@ -235,7 +235,16 @@ MPRM <- function(data, desmat, ldes,lp, start, control){
 
     itmat <- matrix(as.vector(desmat %*% res$par), nrow=kateg.zahl)
     #itmat_se <- matrix(sqrt(diag(desmat %*% solve(res$hessian*(-1)) %*% t(desmat))), nrow=kateg.zahl)
-    itmat_se <- cbind(rbind(matrix(estpar_se, (nrow=kateg.zahl-1)), NA),NA)
+
+    if(length(estpar_se) == (ncol(itmat)-1)*2){
+      itmat_se <- cbind(rbind(matrix(estpar_se, (nrow=kateg.zahl-1)), NA),NA)
+    } else {
+      dpl <- desmat
+      dpl[dpl!=1] <- 0
+      fse <- dpl %*% estpar_se
+      itmat_se <- matrix(fse, nrow=kateg.zahl)
+    }
+
 
     if(!is.null(colnames(data))){
       colnames(itmat) <- paste("beta", colnames(data))
