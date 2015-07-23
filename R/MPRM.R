@@ -107,160 +107,159 @@
 #' summary(res_mprm2)
 #'
 #' @export MPRM
-MPRM <-
-  function(data, desmat, ldes,lp, start, control){
+MPRM <- function(data, desmat, ldes,lp, start, control){
 
-    call <- match.call()
+  call <- match.call()
 
-    if(any(diff(as.numeric(names(table(data))),lag=1) != 1)){stop("categories level must be consecutive numbers")}
+  if(any(diff(as.numeric(names(table(data))),lag=1) != 1)){stop("categories level must be consecutive numbers")}
 
-    if(is.data.frame(data)) {data <- as.matrix(data)}
+  if(is.data.frame(data)) {data <- as.matrix(data)}
 
-    if(min(data) != 0){
-      data <- data - min(data)
+  if(min(data) != 0){
+    data <- data - min(data)
+  }
+
+  kateg.zahl <- length(table(data))
+  item.zahl <- ncol(data)
+
+  # margin vector groups of persons
+
+  row.table <- apply(data+1,1,function(x) sprintf("%04d",(tabulate(x,nbins=kateg.zahl))))
+
+  pat   <- apply(row.table,2, function(n) paste0(n, collapse=""))
+  patt  <- table(pat)
+
+  #first term (last category left out because these item parameters are 0)
+
+  col.table <- apply(data+1, 2, function(s) tabulate(s,nbins=kateg.zahl))
+
+  #designmatrix
+  if(missing(desmat)){
+    desmat <- designMPRM(data)
+  } else {desmat <- as.matrix(desmat)}
+
+  #control parameters for optim
+  if(missing(control)){
+    control <- list(fnscale=-1, maxit=1000)
+  }
+
+
+  #pattern
+
+  patmat <- t(xsimplex(kateg.zahl,item.zahl))
+  patmat.o <- patmat[order(patmat[,kateg.zahl], decreasing=T),]
+
+  patt.c <- apply(patmat.o,1,function(p) paste0(sprintf("%04d",p),collapse=""))
+
+  if(missing(ldes) & missing(lp)){
+
+    #Startwerte
+
+    #improved starting values for MPRM
+    if(missing(start)){
+      startval <- rep(0, ncol(desmat))
+    } else if(is.numeric(start)){
+      startval <- start
+    } else {
+      if (!is.numeric(start)) stop("Error: starting values are not numeric!")
+      if (length(start) != ncol(desmat)) stop("Error: incorrect number of starting values!")
     }
 
-    kateg.zahl <- length(table(data))
-    item.zahl <- ncol(data)
+    cL <- function(para=startval,kateg.zahl=kateg.zahl, item.zahl=item.zahl,col.table=col.table, patmat.o=patmat.o, patt.c=patt.c, patt=patt, desmat=desmat){
+      eps <- matrix(exp(desmat %*% para), nrow=kateg.zahl)
 
-    # margin vector groups of persons
+      fir <- sum(col.table* log(eps))
 
-    row.table <- apply(data+1,1,function(x) sprintf("%04d",(tabulate(x,nbins=kateg.zahl))))
+      if(kateg.zahl > 2){
+        cf.g <- combfunc(kateg.zahl, item.zahl, eps.mat=t(eps), patmat.o)
 
-    pat   <- apply(row.table,2, function(n) paste0(n, collapse=""))
-    patt  <- table(pat)
+        ord <- sapply(names(patt), function(hpat) which(patt.c %in% hpat))
+        cfg.o <- log(cf.g$gammat[ord])
+        sec <- sum(patt*cfg.o,na.rm=T)
 
-    #first term (last category left out because these item parameters are 0)
+      } else {
+        cf.g <- gamfunk(epsmat=eps[1,])
+        sec <- sum(patt[-1] * log(cf.g$gammat), na.rm=T)
+      }
+      #search for gamma for each patt
 
-    col.table <- apply(data+1, 2, function(s) tabulate(s,nbins=kateg.zahl))
-
-    #designmatrix
-    if(missing(desmat)){
-      desmat <- designMPRM(data)
-    } else {desmat <- as.matrix(desmat)}
-
-    #control parameters for optim
-    if(missing(control)){
-      control <- list(fnscale=-1, maxit=1000)
+      fir-sec
     }
 
+    der1 <- function(para=startval, col.table=col.table, kateg.zahl=kateg.zahl, item.zahl=item.zahl, patmat.o=patmat.o, patt=patt, patt.c=patt.c, desmat=desmat){
+      eps <- matrix(exp(as.vector(desmat %*% para)), nrow=kateg.zahl)
 
-    #pattern
+      eps.f <- list(eps)
 
-    patmat <- t(xsimplex(kateg.zahl,item.zahl))
-    patmat.o <- patmat[order(patmat[,kateg.zahl], decreasing=T),]
+      for (e in seq_len(item.zahl-1)){
+        eps.f[[e+1]] <- cbind(eps.f[[e]][,2:item.zahl],eps.f[[e]][,1])
+      }
+      if(kateg.zahl > 2){
+        cf.all <- lapply(eps.f, function(gg) {combfunc(kateg.zahl, item.zahl, eps.mat=t(gg), patmat.o)})
 
-    patt.c <- apply(patmat.o,1,function(p) paste0(sprintf("%04d",p),collapse=""))
+        #Vektor raussuchen wo die auftretenden pattern in patt.c vorkommen
 
-   if(missing(ldes) & missing(lp)){
+        ord2 <- sapply(names(patt), function(hpat) which(patt.c %in% hpat))
+        cf.o <- lapply(cf.all, function(ln) ln$gam.quot[ord2,])
 
-     #Startwerte
+        cf.oNR <- sapply(1:item.zahl, function(l2) {colSums(t(t(cf.o[[l2]]))*as.vector(patt), na.rm=TRUE)})
 
-     #improved starting values for MPRM
-     if(missing(start)){
-       startval <- rep(0, ncol(desmat))
-     } else if(is.numeric(start)){
-       startval <- start
-     } else {
-       if (!is.numeric(start)) stop("Error: starting values are not numeric!")
-       if (length(start) != ncol(desmat)) stop("Error: incorrect number of starting values!")
-     }
+        cf.oNR2 <- cf.oNR*eps[-kateg.zahl,]
+      } else {
 
-     cL <- function(para=startval,kateg.zahl=kateg.zahl, item.zahl=item.zahl,col.table=col.table, patmat.o=patmat.o, patt.c=patt.c, patt=patt, desmat=desmat){
-       eps <- matrix(exp(desmat %*% para), nrow=kateg.zahl)
+        for (e in seq_len(item.zahl)){
+          eps.f[[e+1]] <- cbind(eps.f[[e]][,2:item.zahl],eps.f[[e]][,1])
+        }
+        eps.f[[1]] <- NULL
 
-       fir <- sum(col.table* log(eps))
+        cf.all <- lapply(eps.f, function(gg) {gamfunk(epsmat=gg[1,])})
 
-       if(kateg.zahl > 2){
-         cf.g <- combfunc(kateg.zahl, item.zahl, eps.mat=t(eps), patmat.o)
+        #Vektor raussuchen wo die auftretenden pattern in patt.c vorkommen
 
-         ord <- sapply(names(patt), function(hpat) which(patt.c %in% hpat))
-         cfg.o <- log(cf.g$gammat[ord])
-         sec <- sum(patt*cfg.o,na.rm=T)
+        #ord2 <- sapply(names(patt), function(hpat) which(patt.c %in% hpat))
+        cf.o <- lapply(cf.all, function(ln) ln$gam.quot)
 
-       } else {
-         cf.g <- gamfunk(epsmat=eps[1,])
-         sec <- sum(patt[-1] * log(cf.g$gammat), na.rm=T)
-       }
-       #search for gamma for each patt
+        cf.oNR <- sapply(1:item.zahl, function(l2) {colSums(t(t(cf.o[[l2]]))*as.vector(patt[-c(1)]), na.rm=TRUE)})
 
-       fir-sec
-     }
+        cf.oNR2 <- cf.oNR*eps[1,]
 
-     der1 <- function(para=startval, col.table=col.table, kateg.zahl=kateg.zahl, item.zahl=item.zahl, patmat.o=patmat.o, patt=patt, patt.c=patt.c, desmat=desmat){
-       eps <- matrix(exp(as.vector(desmat %*% para)), nrow=kateg.zahl)
-
-       eps.f <- list(eps)
-
-       for (e in seq_len(item.zahl-1)){
-         eps.f[[e+1]] <- cbind(eps.f[[e]][,2:item.zahl],eps.f[[e]][,1])
-       }
-       if(kateg.zahl > 2){
-         cf.all <- lapply(eps.f, function(gg) {combfunc(kateg.zahl, item.zahl, eps.mat=t(gg), patmat.o)})
-
-         #Vektor raussuchen wo die auftretenden pattern in patt.c vorkommen
-
-         ord2 <- sapply(names(patt), function(hpat) which(patt.c %in% hpat))
-         cf.o <- lapply(cf.all, function(ln) ln$gam.quot[ord2,])
-
-         cf.oNR <- sapply(1:item.zahl, function(l2) {colSums(t(t(cf.o[[l2]]))*as.vector(patt), na.rm=TRUE)})
-
-         cf.oNR2 <- cf.oNR*eps[-kateg.zahl,]
-       } else {
-
-         for (e in seq_len(item.zahl)){
-           eps.f[[e+1]] <- cbind(eps.f[[e]][,2:item.zahl],eps.f[[e]][,1])
-         }
-         eps.f[[1]] <- NULL
-
-         cf.all <- lapply(eps.f, function(gg) {gamfunk(epsmat=gg[1,])})
-
-         #Vektor raussuchen wo die auftretenden pattern in patt.c vorkommen
-
-         #ord2 <- sapply(names(patt), function(hpat) which(patt.c %in% hpat))
-         cf.o <- lapply(cf.all, function(ln) ln$gam.quot)
-
-         cf.oNR <- sapply(1:item.zahl, function(l2) {colSums(t(t(cf.o[[l2]]))*as.vector(patt[-c(1)]), na.rm=TRUE)})
-
-         cf.oNR2 <- cf.oNR*eps[1,]
-
-       }
+      }
 
 
-       t(desmat[-seq(kateg.zahl,item.zahl*kateg.zahl, by=kateg.zahl),]) %*% as.vector(col.table[-kateg.zahl,] - cf.oNR2)
-     }
+      t(desmat[-seq(kateg.zahl,item.zahl*kateg.zahl, by=kateg.zahl),]) %*% as.vector(col.table[-kateg.zahl,] - cf.oNR2)
+    }
 
-     res <- optim(startval, cL,gr=der1, kateg.zahl=kateg.zahl, item.zahl=item.zahl,col.table=col.table, patmat.o=patmat.o,patt.c=patt.c, patt=patt, desmat=desmat, method="BFGS", control=control, hessian=TRUE)
+    res <- optim(startval, cL,gr=der1, kateg.zahl=kateg.zahl, item.zahl=item.zahl,col.table=col.table, patmat.o=patmat.o,patt.c=patt.c, patt=patt, desmat=desmat, method="BFGS", control=control, hessian=TRUE)
 
-     estpar_se <- sqrt(diag(solve(res$hessian*(-1))))
+    estpar_se <- sqrt(diag(solve(res$hessian*(-1))))
 
-     itmat <- matrix(as.vector(desmat %*% res$par), nrow=kateg.zahl)
-     #itmat_se <- matrix(sqrt(diag(desmat %*% solve(res$hessian*(-1)) %*% t(desmat))), nrow=kateg.zahl)
-     itmat_se <- cbind(rbind(matrix(estpar_se, (nrow=kateg.zahl-1)), NA),NA)
+    itmat <- matrix(as.vector(desmat %*% res$par), nrow=kateg.zahl)
+    #itmat_se <- matrix(sqrt(diag(desmat %*% solve(res$hessian*(-1)) %*% t(desmat))), nrow=kateg.zahl)
+    itmat_se <- cbind(rbind(matrix(estpar_se, (nrow=kateg.zahl-1)), NA),NA)
 
-     if(!is.null(colnames(data))){
-       colnames(itmat) <- paste("beta", colnames(data))
-       colnames(itmat_se) <- paste("SE", colnames(data))
-     } else {
-       colnames(itmat) <- paste("beta item", 1:ncol(itmat))
-       colnames(itmat_se) <- paste("SE item", 1:ncol(itmat))
-     }
+    if(!is.null(colnames(data))){
+      colnames(itmat) <- paste("beta", colnames(data))
+      colnames(itmat_se) <- paste("SE", colnames(data))
+    } else {
+      colnames(itmat) <- paste("beta item", 1:ncol(itmat))
+      colnames(itmat_se) <- paste("SE item", 1:ncol(itmat))
+    }
 
-     rownames(itmat) <- paste("cat", 1:nrow(itmat))
-     rownames(itmat_se) <- paste("cat", 1:nrow(itmat))
+    rownames(itmat) <- paste("cat", 1:nrow(itmat))
+    rownames(itmat_se) <- paste("cat", 1:nrow(itmat))
 
 
-     res_all <- list(data=data, design=desmat, logLikelihood=res$value, estpar=res$par, estpar_se=estpar_se, itempar=itmat*(-1), itempar_se=itmat_se, hessian=res$hessian, convergence=res$convergence, fun_calls=res$counts, call=call)
+    res_all <- list(data=data, design=desmat, logLikelihood=res$value, estpar=res$par, estpar_se=estpar_se, itempar=itmat*(-1), itempar_se=itmat_se, hessian=res$hessian, convergence=res$convergence, fun_calls=res$counts, call=call)
 
-     } else {
+  } else {
 
-       #starting values
-       #improved starting values for MPRM
-       if(missing(start)){
-         startval <- rep(0, (ncol(desmat)+max(lp)))
-       } else {
-         if (!is.numeric(start)) stop("Error: starting values are not numeric!")
-         if (length(start) != ncol(desmat)) stop("Error: incorrect number of starting values!")}
+    #starting values
+    #improved starting values for MPRM
+    if(missing(start)){
+      startval <- rep(0, (ncol(desmat)+max(lp)))
+    } else {
+      if (!is.numeric(start)) stop("Error: starting values are not numeric!")
+      if (length(start) != ncol(desmat)) stop("Error: incorrect number of starting values!")}
 
 
     cLr <- function(para=startval,kateg.zahl=kateg.zahl, item.zahl=item.zahl,col.table=col.table, patmat.o=patmat.o, patt.c=patt.c, patt=patt, desmat=desmat, ldes=ldes, lp=lp){
@@ -272,7 +271,7 @@ MPRM <-
       dplug <- desmat
       dplug <- apply(desmat, 2, function(m) ldesn*m)
       kateg.lp <- c(which(ldesn!=0)[1],diff(which(ldesn!=0))-1)
-      ldesmat <- matrix(ldesn,nrow=3)
+      ldesmat <- matrix(ldesn,nrow=kateg.zahl)
       coldes <- which(apply(ldesmat, 2, function(m2) any(!is.na(m2))))
       for(i in 1:length(kateg.lp)){
         dplug[(nrow(desmat)-kateg.lp[i]+1), coldes[i]] <- -lpn[i]
@@ -303,39 +302,45 @@ MPRM <-
       fir-sec
     }
 
-res <- optim(startval, cLr, kateg.zahl=kateg.zahl, item.zahl=item.zahl,col.table=col.table, patmat.o=patmat.o,patt.c=patt.c, patt=patt, desmat=desmat, ldes=ldes, lp=lp,method="BFGS", control=control, hessian=TRUE)
+    res <- optim(startval, cLr, kateg.zahl=kateg.zahl, item.zahl=item.zahl,col.table=col.table, patmat.o=patmat.o,patt.c=patt.c, patt=patt, desmat=desmat, ldes=ldes, lp=lp,method="BFGS", control=control, hessian=TRUE)
 
 
-  estpar_se <- sqrt(diag(solve(res$hessian*(-1))))
+    estpar_se <- sqrt(diag(solve(res$hessian*(-1))))
 
-#design matrix with linear dependent parameters
-  lpn <- res$par[c((length(res$par)-max(lp)+1):length(res$par))][lp]
-  ldesn <- ldes
-  ldesn[ldesn!=0] <- lpn
-  ldesn[ldesn==0] <- NA
-  dplug <- desmat
-  dplug <- apply(desmat, 2, function(m) ldesn*m)
-  kateg.lp <- c(which(ldesn!=0)[1],diff(which(ldesn!=0))-1)
-  ldesmat <- matrix(ldesn,nrow=3)
-  coldes <- which(apply(ldesmat, 2, function(m2) any(!is.na(m2))))
-  for(i in 1:length(kateg.lp)){
-    dplug[(nrow(desmat)-kateg.lp[i]+1), coldes[i]] <- -lpn[i]
-  }
-  dplug2 <- desmat
-  dplug2[dplug!=0 & !is.na(dplug)] <- dplug[dplug!=0 & !is.na(dplug)]
+    #design matrix with linear dependent parameters
+    lpn <- res$par[c((length(res$par)-max(lp)+1):length(res$par))][lp]
+    ldesn <- ldes
+    ldesn[ldesn!=0] <- lpn
+    ldesn[ldesn==0] <- NA
+    dplug <- desmat
+    dplug <- apply(desmat, 2, function(m) ldesn*m)
+    kateg.lp <- c(which(ldesn!=0)[1],diff(which(ldesn!=0))-1)
+    ldesmat <- matrix(ldesn, nrow=kateg.zahl)
+    coldes <- which(apply(ldesmat, 2, function(m2) any(!is.na(m2))))
+    for(i in 1:length(kateg.lp)){
+      dplug[(nrow(desmat)-kateg.lp[i]+1), coldes[i]] <- -lpn[i]
+    }
+    dplug2 <- desmat
+    dplug2[dplug!=0 & !is.na(dplug)] <- dplug[dplug!=0 & !is.na(dplug)]
 
-  fmat <- dplug2 %*% res$par[-c((length(res$par)-max(lp)+1):length(res$par))]
+    fmat <- dplug2 %*% res$par[-c((length(res$par)-max(lp)+1):length(res$par))]
 
-#    for(k in seq_along(lp)){
-#      fmat[ldes!=0][k] <- fmat[ldes[ldes!=0][k]]*(res$par[c((length(res$par)-max(lp)+1):length(res$par))][lp[k]])
-#    }
+    #    for(k in seq_along(lp)){
+    #      fmat[ldes!=0][k] <- fmat[ldes[ldes!=0][k]]*(res$par[c((length(res$par)-max(lp)+1):length(res$par))][lp[k]])
+    #    }
 
 
     #itmat_se <- matrix(sqrt(diag(desmat %*% solve(res$hessian[-c((length(res$par)-max(lp)+1):length(res$par)),-c((length(res$par)-max(lp)+1):length(res$par))]*(-1)) %*% t(desmat))), nrow=kateg.zahl)
-    lz <- as.vector(ldesmat[-kateg.zahl,-item.zahl])
-    itmat_se <- rep(NA, length(lz))
-    itmat_se[is.na(lz)] <- estpar_se[-c((length(res$par)-max(lp)+1):length(res$par))]
-    itmat_se <- rbind(cbind(matrix(itmat_se, nrow=kateg.zahl-1),NA),NA)
+
+    estpar_se_it <- estpar_se[1:(length(estpar_se)-max(lp))]
+    dplug2_se <- dplug2
+    dplug2_se[dplug2_se != 1] <- 0
+    fse <- dplug2_se %*% estpar_se[-c((length(res$par)-max(lp)+1):length(res$par))]
+    posNA <- which(ldes!=0)
+    fse[posNA] <- NA
+    itmat_se <- matrix(fse, nrow=kateg.zahl)
+    itmat_se[kateg.zahl,] <- NA
+    itmat_se[,item.zahl] <- NA
 
     itmat <- matrix(as.vector(fmat), nrow=kateg.zahl)
 
@@ -354,10 +359,9 @@ res <- optim(startval, cLr, kateg.zahl=kateg.zahl, item.zahl=item.zahl,col.table
     linpar_se <- estpar_se[c((length(res$par)-max(lp)+1):length(res$par))]
 
     res_all <- list(data=data, design=desmat, logLikelihood=res$value, estpar=res$par, estpar_se=estpar_se, itempar=itmat*(-1), itempar_se=itmat_se, linpar=linpar,
-linpar_se=linpar_se, hessian=res$hessian, convergence=res$convergence, fun_calls=res$counts, call=call)
-   }
+                    linpar_se=linpar_se, hessian=res$hessian, convergence=res$convergence, fun_calls=res$counts, call=call)
+  }
 
-    class(res_all) <- "MPRM"
-    res_all
+  class(res_all) <- "MPRM"
+  res_all
 }
-
