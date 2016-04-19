@@ -7,17 +7,20 @@
 \alias{iccplot.MPRM}
 \title{Item Characteristic Curve}
 \usage{
-\method{iccplot}{CRSM}(object, ...)
+\method{iccplot}{CRSM}(object, items = "all", ...)
 
-\method{iccplot}{DRM}(object, ...)
+\method{iccplot}{DRM}(object, items = "all", ...)
 
-\method{iccplot}{MPRM}(object, ...)
+\method{iccplot}{MPRM}(object, items = "all", ...)
 
 iccplot(object, ...)
 }
 \arguments{
 \item{object}{Object of class \code{CRSM} for ICC of the
-CRSM or object of class \code{MPRM} for graphical model check of the MPRM}
+CRSM or object of class \code{MPRM} for ICC plot of the MPRM or object of class \code{DRM} for ICC plot of the DRM}
+
+\item{items}{Character vector \code{"all"} to display ICC curves for all items. By entering a numeric vector, a subset of items
+can be chosen for which ICC plots are drawn.}
 
 \item{\dots}{\dots{}}
 }
@@ -28,6 +31,8 @@ Rasch model or the continuous Rating Scale Model.
 \details{
 The item characteristic curve (ICC) plots the response probability depending on person and item parameter.
 For plotting the ICC, the object resulting from MPRM \code{\link{MPRM}} or CRSM \code{\link{CRSM}} is the input for the \code{iccplot} function.
+The default argument \code{items="all"} displays ICC curves for all items in the object. With a numeric vector \code{items}, a subset of
+items can be selected for which ICC plots are displayed.
 }
 \examples{
 #estimate CRSM for the first three items
@@ -41,7 +46,7 @@ iccplot(res_cr)
 Christine Hohensinn
 }
 \seealso{
-\code{\link{LRT}} \code{\link{CRSM}}
+\code{\link{MPRM}} \code{\link{CRSM}}
 }
 \keyword{characteristic}
 \keyword{curve,}
