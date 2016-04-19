@@ -120,6 +120,7 @@ MPRM <- function(data, desmat, ldes,lp, start, control){
   }
 
   kateg.zahl <- length(table(data))
+  if(kateg.zahl==2){stop("There are only 2 categories in the data set. Use DRM() to estimate a dichotomous Rasch model")}
   item.zahl <- ncol(data)
 
   # margin vector groups of persons

@@ -118,8 +118,8 @@ colnames(ptable) <- c(paste(rep("pers.par.cat",kateg.zahl), 1:kateg.zahl, sep=""
 
 pvec <- apply(row.table1,2, function(n2) paste0(n2, collapse="|"))
 
-ptable2 <- t(apply(ptable, 1, function(p1) scale(p1[1:3], scale=FALSE)))
-ptable3 <- cbind(ptable2, ptable[,4:5])
+ptable2 <- t(apply(ptable, 1, function(p1) scale(p1[1:kateg.zahl], scale=FALSE)))
+ptable3 <- cbind(ptable2, ptable[,(kateg.zahl+1):length(colnames(ptable))])
 colnames(ptable3) <- colnames(ptable)
 
 pparList <- ptable3[match(pvec,rownames(ptable3)),]
