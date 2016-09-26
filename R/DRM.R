@@ -55,18 +55,20 @@ rv.r <- rowSums(dat.r)
 si.r <- colSums(dat.r)
 fr.r <- tabulate(rv.r, nbins=(ncol(data)-1))
 
+if(missing(desmat)){
+  desmat <- rbind(diag(1,nrow=ncol(data)-1),-1)
+}
+
 if(missing(start)){
-  para <- rep(0,(ncol(data)-1))
-} else if(start == "improved"){
-  para <-(nrow(dat.r)-si.r[1:(ncol(dat.r)-1)])/si.r[1:(ncol(dat.r)-1)]-(sum(log((nrow(dat.r)-si.r)/si.r))/length(si.r))
-} else if(start != "improved" & is.numeric(start)==FALSE){
+  para <- rep(0,(ncol(desmat)))
+  #} else if(start == "improved"){
+  #  para <-(nrow(dat.r)-si.r[1:(ncol(dat.r)-1)])/si.r[1:(ncol(dat.r)-1)]-(sum(log((nrow(dat.r)-si.r)/si.r))/length(si.r))
+  #} else if(start != "improved" & is.numeric(start)==FALSE){
+  #  stop("start values have to be numeric!")
+} else if(is.numeric(start)==FALSE){
   stop("start values have to be numeric!")
 } else {
   para <- start
-}
-
-if(missing(desmat)){
-  desmat <- rbind(diag(1,nrow=length(para)),-1)
 }
 
 cmlLoglik <- function(sigs, si, roh, desmat){
@@ -81,17 +83,19 @@ cmlLoglik <- function(sigs, si, roh, desmat){
 }
 
 if(missing(control)){
-  control <- list(fnscale=-1, maxit=1000)}
+  control <- list(fnscale=-1, maxit=1000)
+  }
 res <- optim(para, fn=cmlLoglik, si=si.r, roh=fr.r,desmat=desmat, control=control, hessian=TRUE, method="L-BFGS-B")
 
 # normalize item parameters
 itempar <- as.vector(desmat %*% res$par)
 
 #SE
-estpar_se <- sqrt(diag(solve(res$hessian*(-1))))
+  estpar_se <- sqrt(diag(solve(res$hessian*(-1))))
 
-#itempar_se <- sqrt(diag(desmat %*% solve(res$hessian*(-1)) %*% t(desmat)))
-itempar_se <- c(estpar_se,NA)
+
+itempar_se <- sqrt(diag(desmat %*% solve(res$hessian*(-1)) %*% t(desmat)))
+#itempar_se <- c(estpar_se,NA)
 
 if(!is.null(colnames(data))){
   names(itempar) <- paste("beta", colnames(data))
