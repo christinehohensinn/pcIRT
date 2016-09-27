@@ -1,13 +1,12 @@
-#' Data set B5PO-R personality questionnaire
+#' Data set exdat
 #'
-#' This object contains data from the B5PO-R (Kubinger and Siptroth, in prep.), the revised version of the B5PO (Holocher-Ertl, Kubinger and Menghin, 2003). The items are from the extraversion scale.
+#' This object contains simulated data that provide as example data for the examples of the function. The data set consists of 15 items and 500 persons
 #'#'
-#' @name extraversion
+#' @name exdat
 #' @docType data
 #' @format workspace
-#' @source Study
+#' @source simulation
 #' @keywords datasets
-#' @references Holocher-Ertl, S., Kubinger, K. D. and Menghin, S. (2003). Big Five Plus One Persoenlichkeitsinventar (B5PO). Moedling: Wiener Testsystem/Schuhfried.
 NULL
 
 
