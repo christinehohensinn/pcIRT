@@ -1,4 +1,4 @@
-#' simulate data according to MPRM
+#' simulate data according to Rasch model
 #' 
 #' With this function data sets according to the dichotomous 
 #' Rasch model (DRM) are simulated
@@ -30,7 +30,8 @@
 #' #simulate data set
 #' simdatD <- simDRM(item_p, pn)
 #' 
-#' @export simMPRM
+#' @export simDRM
+#' 
 simDRM <-
 function(itempar, persons=500, seed=NULL){
 
