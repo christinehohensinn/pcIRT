@@ -31,7 +31,7 @@
 #' simdatD <- simDRM(item_p, pn)
 #' 
 #' @export simMPRM
-simMPRM <-
+simDRM <-
 function(itempar, persons=500, seed=NULL){
 
 ppar <- rnorm(persons, 0,1)
