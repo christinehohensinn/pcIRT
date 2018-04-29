@@ -52,6 +52,7 @@ NULL
 #' @name pcIRT-package
 #' @aliases pcIRT-package pcIRT
 #' @docType package
+#' @useDynLib pcIRT, .registration = TRUE
 #' @author Christine Hohensinn Maintainer: Christine Hohensinn
 #' <research@@christinehohensinn.at>
 #' @seealso \code{\link{MPRM}} \code{\link{CRSM}}
