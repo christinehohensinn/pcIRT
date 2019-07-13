@@ -7,10 +7,6 @@
 \alias{LRT}
 \alias{summary.aLR}
 \alias{print.aLR}
-\alias{LRT.MPRM}
-\alias{LRT.DRM}
-\alias{print.aLR}
-\alias{summary.aLR}
 \title{Computes Andersen's Likelihood Ratio Test for the multidimensional
 polytomous Rasch model}
 \usage{

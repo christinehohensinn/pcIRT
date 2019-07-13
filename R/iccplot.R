@@ -19,14 +19,6 @@
 #'
 #' @rdname iccplot
 #' @keywords item characteristic curve, item characteristic function
-#' @examples
-#'
-#' #estimate CRSM for the first three items
-#' data(analog)
-#' res_cr <- CRSM(extraversion, low=-10, high=10)
-#'
-#' #ICC plot
-#' iccplot(res_cr)
 #'
 #'
 #' @export iccplot

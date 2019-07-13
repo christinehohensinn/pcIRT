@@ -4,8 +4,6 @@
 \alias{gmc.CRSM}
 \alias{gmc}
 \alias{gmc.aLR}
-\alias{gmc.CRSM}
-\alias{gmc.aLR}
 \title{Graphical model check}
 \usage{
 \method{gmc}{CRSM}(object, splitcrit = "score", ...)
@@ -40,18 +38,6 @@ For plotting a graphical model check for the CRSM, the model has to be
 estimated with \code{\link{CRSM}} and subsequently the resulting object is
 the input for the \code{gmc} function. For the CRSM a split criterion has to
 be input as vector.
-}
-\examples{
-
-#estimate CRSM for the first three items
-data(analog)
-res_cr <- CRSM(extraversion, low=-10, high=10)
-
-#graphical model check for CRSM for the first three items with default split
-#criterion score
-gmc(res_cr)
-
-
 }
 \references{
 Wright, B.D., and Stone, M.H. (1999). Measurement Essentials.

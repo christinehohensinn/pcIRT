@@ -1,10 +1,11 @@
 #'@rdname perspar
 #'@method person_par CRSM
-#'@export
+
 
 person_par.CRSM <-
 function(object, ...){
-
+cat("Warning: the function CRSM may lead to incorrect estimation results. The function is currently checked")
+  
 call <- match.call()
 
 scores <- unique(rowSums(object$data_p))

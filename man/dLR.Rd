@@ -4,8 +4,6 @@
 \alias{dLRT}
 \alias{summary.dLR}
 \alias{print.dLR}
-\alias{print.dLR}
-\alias{summary.dLR}
 \title{Dimensionality test for the multidimensional polytomous Rasch model}
 \usage{
 dLRT(MPRMobj)

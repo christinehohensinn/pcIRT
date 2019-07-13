@@ -24,28 +24,14 @@
 #' @references Mueller, H. (1987). A Rasch model for continuous ratings.
 #' Psychometrika, 52, 165-181.
 #' @keywords continuous rating scale model simulation
-#' @examples
-#'
-#' #set item parameters
-#' item_p <- c(-1.5,-0.5,0.5,1)
-#'
-#' #set dispersion parameter for items
-#' dis_p <- 5
-#'
-#' #generate person parameters by a standard normal dispersion
-#' pp <- rnorm(50, 0,1)
-#'
-#' #simulate data set
-#' #this is only an illustrating example for simulating data!
-#' #In practice, a sample size of n=50 will be too small for most application
-#' #demands
-#' simdatC <- simCRSM(item_p, dis_p, pp)
 #'
 #'
-#' @export simCRSM
+
 simCRSM <-
 function(itempar, disp, perspar, mid=0.5, len=1, seed=NULL){
-
+  cat("Warning: the function CRSM may lead to incorrect estimation results. The function is currently checked")
+  
+  
 mat.intercept <- outer(perspar, itempar, "-")
 
 forint <- as.vector(mat.intercept)

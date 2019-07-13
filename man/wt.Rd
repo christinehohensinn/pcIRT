@@ -4,8 +4,6 @@
 \alias{print.wt}
 \alias{summary.wt}
 \alias{weight_test}
-\alias{summary.wt}
-\alias{print.wt}
 \title{Test for the scoring weights in the unidimensional polytomous Rasch model}
 \usage{
 \method{print}{wt}(x, ...)

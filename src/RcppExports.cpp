@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // gamfunk
 NumericVector gamfunk(NumericVector epsmat, NumericMatrix gammat);
-RcppExport SEXP pcIRT_gamfunk(SEXP epsmatSEXP, SEXP gammatSEXP) {
+RcppExport SEXP _pcIRT_gamfunk(SEXP epsmatSEXP, SEXP gammatSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -16,4 +16,14 @@ BEGIN_RCPP
     rcpp_result_gen = Rcpp::wrap(gamfunk(epsmat, gammat));
     return rcpp_result_gen;
 END_RCPP
+}
+
+static const R_CallMethodDef CallEntries[] = {
+    {"_pcIRT_gamfunk", (DL_FUNC) &_pcIRT_gamfunk, 2},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_pcIRT(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
 }

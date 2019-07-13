@@ -2,6 +2,6 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 gamfunk <- function(epsmat, gammat) {
-    .Call('pcIRT_gamfunk', PACKAGE = 'pcIRT', epsmat, gammat)
+    .Call(`_pcIRT_gamfunk`, epsmat, gammat)
 }
 

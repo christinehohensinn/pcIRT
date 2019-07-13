@@ -16,10 +16,6 @@ unidimensional continuum. For this case the scoring parameter of the
 categories is estimated.
 }
 \details{
-This package estimates the Continuous Rating Scale model by Mueller (1987).
-It is an extension of the Rating Scale Model by Andrich (1978) on continuous
-responses (e.g. taken by a visual analog scale).
-
 \tabular{ll}{ Package: \tab pcIRT\cr Type: \tab Package\cr Version: \tab
 0.1\cr Date: \tab 2013-11-13\cr License: \tab GPL-3\cr }
 }

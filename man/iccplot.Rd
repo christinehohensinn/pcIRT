@@ -6,9 +6,6 @@
 \alias{iccplot.DRM}
 \alias{iccplot.MPRM}
 \alias{iccplot}
-\alias{iccplot.CRSM}
-\alias{iccplot.MPRM}
-\alias{iccplot.DRM}
 \title{Item Characteristic Curve}
 \usage{
 \method{iccplot}{CRSM}(object, items = "all", ...)
@@ -37,17 +34,6 @@ The item characteristic curve (ICC) plots the response probability depending on 
 For plotting the ICC, the object resulting from MPRM \code{\link{MPRM}} or CRSM \code{\link{CRSM}} or DRM \code{\link{DRM}} is the input for the \code{iccplot} function.
 The default argument \code{items="all"} displays ICC curves for all items in the object. With a numeric vector \code{items}, a subset of
 items can be selected for which ICC plots are displayed.
-}
-\examples{
-
-#estimate CRSM for the first three items
-data(analog)
-res_cr <- CRSM(extraversion, low=-10, high=10)
-
-#ICC plot
-iccplot(res_cr)
-
-
 }
 \seealso{
 \code{\link{MPRM}} \code{\link{CRSM}} \code{\link{DRM}}
